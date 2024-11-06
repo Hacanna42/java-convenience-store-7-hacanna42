@@ -20,6 +20,10 @@ public class View {
         return instance;
     }
 
+    public void printGreetingMessage() {
+        outputView.printGreetingMessage();
+    }
+
     public String promptBuyItems() {
         return retryPrompt(() -> {
             outputView.printBuyRequestMessage();
