@@ -1,9 +1,12 @@
 package store.view;
 
+import java.util.function.Supplier;
+import store.util.Validator;
+
 public class View {
     private static View instance;
-    private InputView inputView;
-    private OutputView outputView;
+    private final InputView inputView;
+    private final OutputView outputView;
 
     private View(InputView inputView, OutputView outputView) {
         this.inputView = inputView;
@@ -17,5 +20,22 @@ public class View {
         return instance;
     }
 
-    // TODO: 다양한 입출력 함수 추가
+    public String promptBuyItems() {
+        return retryPrompt(() -> {
+            outputView.printBuyRequestMessage();
+            String input = inputView.getInput();
+            Validator.checkBuyInput(input);
+            return input;
+        });
+    }
+
+    private String retryPrompt(Supplier<String> supplier) {
+        while (true) {
+            try {
+                return supplier.get();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 }
