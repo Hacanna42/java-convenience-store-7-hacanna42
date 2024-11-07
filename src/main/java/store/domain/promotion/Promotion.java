@@ -1,5 +1,7 @@
 package store.domain.promotion;
 
+import camp.nextstep.edu.missionutils.DateTimes;
+
 public class Promotion {
     private String promotionName;
     private int requiredBuyCount;
@@ -15,5 +17,9 @@ public class Promotion {
 
     public String getPromotionName() {
         return promotionName;
+    }
+
+    public boolean isAvailablePromotion() {
+        return period.isBetweenPeriod(DateTimes.now());
     }
 }

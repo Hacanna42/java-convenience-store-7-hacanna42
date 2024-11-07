@@ -17,12 +17,7 @@ public class StoreService {
 
     public void proceedPurchase(Stock stock, OrderItems orderItems) {
         for (OrderItem orderItem : orderItems.getOrderItems()) {
-            stock.isInStock(orderItem);
-            /*
-            1. 프로모션 재고가 충분한 경우
-            2. 프로모션은 없지만 일반 재고가 충분한 경우
-            3. 프로모션 재고가 충분하지 않은 경우 (
-             */
+//            stock.isInStock(orderItem);
 
         }
     }

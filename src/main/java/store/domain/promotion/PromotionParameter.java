@@ -1,8 +1,8 @@
 package store.domain.promotion;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PromotionParameter {
@@ -46,24 +46,19 @@ public class PromotionParameter {
     }
 
     public Period getPeriod() {
-        try {
-            return new Period(getStartDate(), getEndDate());
-        } catch (ParseException parseException) {
-            System.out.println("[ERROR] promotions.md 파일의 날짜 형식이 올바르지 않습니다. 프로그램을 종료합니다.");
-            throw new RuntimeException();
-        }
+        return new Period(getStartDate(), getEndDate());
     }
 
-    private Date getStartDate() throws ParseException {
+    private LocalDateTime getStartDate() {
         String startDate = promotionParameters.get(ParameterSequence.START_DATE.getSequence());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return simpleDateFormat.parse(startDate);
+        LocalDate localDate = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        return localDate.atStartOfDay();
     }
 
-    private Date getEndDate() throws ParseException {
+    private LocalDateTime getEndDate() {
         String endDate = promotionParameters.get(ParameterSequence.END_DATE.getSequence());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return simpleDateFormat.parse(endDate);
+        LocalDate localDate = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE);
+        return localDate.atStartOfDay();
     }
 }
 
