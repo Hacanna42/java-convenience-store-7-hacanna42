@@ -45,7 +45,7 @@ public class PromotionParameter {
         return Integer.parseInt(toGiveItemCount);
     }
 
-    public Period getPromotionPeriod() {
+    public Period getPeriod() {
         try {
             return new Period(getStartDate(), getEndDate());
         } catch (ParseException parseException) {

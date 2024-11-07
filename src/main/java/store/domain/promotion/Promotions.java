@@ -1,6 +1,8 @@
 package store.domain.promotion;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class Promotions {
     private List<Promotion> promotions;
@@ -9,5 +11,9 @@ public class Promotions {
         this.promotions = promotions;
     }
 
-    // TODO: 특정 이름의 프로모션을 찾는 메시지 구현
+    public Optional<Promotion> findPromotionByName(String promotionName) {
+        return promotions.stream()
+                .filter(promotion -> Objects.equals(promotion.getPromotionName(), promotionName))
+                .findFirst();
+    }
 }

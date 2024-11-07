@@ -8,11 +8,15 @@ import java.util.Scanner;
 import store.domain.promotion.Promotion;
 import store.domain.promotion.PromotionParameter;
 import store.domain.promotion.Promotions;
+import store.domain.promotion.product.Product;
+import store.domain.promotion.product.ProductParameter;
 
 public class StoreInitializer {
+
     public void initializeStore() {
         try {
             readPromotionFile();
+            readProductFile();
         } catch (FileNotFoundException e) {
 
         }
@@ -35,9 +39,35 @@ public class StoreInitializer {
 
     private Promotion initPromotionThat(String line) {
         Validator.checkPromotionInitLine(line);
-        List<String> parameters = StringParser.reverseSplit(",", line, 5);
+        List<String> parameters = List.of(line.split(","));
         PromotionParameter promotionParameter = new PromotionParameter(parameters);
         Promotion promotion = new Promotion(promotionParameter);
         return promotion;
+    }
+
+    private void readProductFile() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File("src/main/resources/products.md"));
+        Validator.checkProductFirstLine(scanner.nextLine());
+        return readProductLines(scanner);
+    }
+
+    private Stock readProductLines(Scanner scanner) {
+        List<Product> products = new ArrayList<>();
+        while (scanner.hasNext()) {
+            String currentLine = scanner.nextLine();
+            products.add(initProductThat(currentLine));
+        }
+    }
+
+    private Product initProductThat(String line) {
+        Validator.checkProductInitLine(line);
+        List<String> parameters = List.of(line.split(","));
+        ProductParameter productParameter = new ProductParameter(parameters);
+        Promotion promotion = findPromotionByName(productParameter.getPromotionName());
+        return new Product(productParameter);
+    }
+
+    private Promotion findPromotionByName(String promotionName) {
+
     }
 }
