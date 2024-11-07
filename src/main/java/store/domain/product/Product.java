@@ -19,6 +19,10 @@ public class Product {
         return name;
     }
 
+    public boolean isPromotedProduct() {
+        return promotion != null;
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

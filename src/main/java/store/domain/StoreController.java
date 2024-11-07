@@ -15,9 +15,9 @@ public class StoreController {
     public void run() {
         printGreetingMessage();
         OrderItems orderItems = getOrderItems();
+        storeService.proceedPurchase(stock, orderItems);
     }
 
-    // TODO: 사용자에게 원하는 수량을 입력 받고 배열로 반환
     private OrderItems getOrderItems() {
         String input = View.getInstance().promptBuyItems();
         return storeService.getOrderItems(input);

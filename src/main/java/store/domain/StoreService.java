@@ -15,6 +15,22 @@ public class StoreService {
         return makeOrderItems(getSeparatedInput(input));
     }
 
+    public void proceedPurchase(Stock stock, OrderItems orderItems) {
+        for (OrderItem orderItem : orderItems.getOrderItems()) {
+            stock.isInStock(orderItem);
+            /*
+            1. 프로모션 재고가 충분한 경우
+            2. 프로모션은 없지만 일반 재고가 충분한 경우
+            3. 프로모션 재고가 충분하지 않은 경우 (
+             */
+
+        }
+    }
+
+    private void purchase(OrderItem orderItem) {
+
+    }
+
     private OrderItems makeOrderItems(List<String> separatedInputs) {
         List<OrderItem> orderItems = new ArrayList<>();
         Pattern pattern = Pattern.compile(ORDER_ITEM_PATTERN_REGEX);
@@ -24,7 +40,7 @@ public class StoreService {
             if (matcher.matches()) {
                 String name = matcher.group(1);
                 int quantity = Integer.parseInt(matcher.group(2));
-
+                System.out.println("New Order Item: " + name + ", " +quantity);
                 OrderItem orderItem = new OrderItem(name, quantity);
                 orderItems.add(orderItem);
             }
