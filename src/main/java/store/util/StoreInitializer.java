@@ -16,12 +16,12 @@ import store.domain.product.ProductParameter;
 public class StoreInitializer {
     private Promotions promotions;
 
-    public void initializeStore() {
+    public Stock initStock() {
         try {
             promotions = readPromotionFile();
-            readProductFile();
+            return readProductFile();
         } catch (FileNotFoundException e) {
-
+            throw new RuntimeException("TODO: 프로그램을 종료해야 하는 Exception 처리 추가");
         }
     }
 
@@ -44,8 +44,7 @@ public class StoreInitializer {
         Validator.checkPromotionInitLine(line);
         List<String> parameters = List.of(line.split(","));
         PromotionParameter promotionParameter = new PromotionParameter(parameters);
-        Promotion promotion = new Promotion(promotionParameter);
-        return promotion;
+        return new Promotion(promotionParameter);
     }
 
     private Stock readProductFile() throws FileNotFoundException {
@@ -59,7 +58,10 @@ public class StoreInitializer {
         while (scanner.hasNext()) {
             String currentLine = scanner.nextLine();
             products.add(initProductThat(currentLine));
+            System.out.println(products.toString());
         }
+
+        return new Stock(products);
     }
 
     private Product initProductThat(String line) {
@@ -72,10 +74,6 @@ public class StoreInitializer {
 
     private Promotion findPromotionByName(String promotionName) {
         Optional<Promotion> promotion = promotions.findPromotionByName(promotionName);
-        if (promotion.isPresent()) {
-            return promotion.get();
-        }
-
-        throw new RuntimeException("TODO: exception 처리 기능 추가");
+        return promotion.orElse(null);
     }
 }

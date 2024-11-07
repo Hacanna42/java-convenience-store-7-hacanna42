@@ -7,7 +7,7 @@ public class Application {
     public static void main(String[] args) {
         // TODO: 프로그램 구현
         StoreInitializer storeInitializer = new StoreInitializer();
-        storeInitializer.initializeStore();
+        storeInitializer.initStock();
         View view = View.getInstance();
         view.printGreetingMessage();
         view.promptBuyItems();
