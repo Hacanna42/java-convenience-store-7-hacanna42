@@ -1,6 +1,8 @@
 package store.view;
 
+import java.util.List;
 import java.util.function.Supplier;
+import store.domain.product.Product;
 import store.util.Validator;
 
 public class View {
@@ -22,6 +24,10 @@ public class View {
 
     public void printGreetingMessage() {
         outputView.printGreetingMessage();
+    }
+
+    public void printStockStatus(List<Product> products) {
+        outputView.printStockStatus(products);
     }
 
     public String promptBuyItems() {

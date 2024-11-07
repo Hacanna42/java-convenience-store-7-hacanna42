@@ -9,4 +9,8 @@ public class Stock {
     public Stock(List<Product> stock) {
         this.stock = stock;
     }
+
+    public List<Product> getProducts() {
+        return stock;
+    }
 }

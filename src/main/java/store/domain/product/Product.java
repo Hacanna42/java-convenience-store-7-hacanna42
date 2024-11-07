@@ -14,4 +14,15 @@ public class Product {
         this.quantity = productParameter.getQuantity();
         this.promotion = promotion;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(name).append(" ").append(price).append("원 ").append(quantity).append("개");
+        if (promotion != null) {
+            stringBuilder.append(" ").append(promotion.getPromotionName());
+        }
+
+        return stringBuilder.toString();
+    }
 }
