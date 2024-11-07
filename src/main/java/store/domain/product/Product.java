@@ -19,8 +19,16 @@ public class Product {
         return name;
     }
 
+    public boolean isAvailableBuyQuantity(int toBuyQuantity) {
+        if (isPromotedProduct()) {
+            return promotion.getMaxAvailableQuantity(quantity) >= toBuyQuantity;
+        }
+
+        return quantity >= toBuyQuantity;
+    }
+
     public boolean isPromotedProduct() {
-        return promotion != null;
+        return promotion.isAvailablePromotion();
     }
 
     @Override
