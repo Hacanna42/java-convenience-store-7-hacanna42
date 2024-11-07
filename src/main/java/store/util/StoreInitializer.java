@@ -58,7 +58,6 @@ public class StoreInitializer {
         while (scanner.hasNext()) {
             String currentLine = scanner.nextLine();
             products.add(initProductThat(currentLine));
-            System.out.println(products.toString());
         }
 
         return new Stock(products);
