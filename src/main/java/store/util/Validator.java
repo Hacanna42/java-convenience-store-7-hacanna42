@@ -5,10 +5,10 @@ public class Validator {
     private static final String BUY_INPUT_REGEX = "^(\\[[^,\\[\\]]+?-\\d+?],)*\\[[^,\\[\\]]+?-\\d+?]$";
     // 프로모션 파일의 형식이 "name,buy,get,start_date,end_date" 인지 확인하는 정규식
     private static final String PROMOTION_FIRST_LINE_REGEX = "^name,buy,get,start_date,end_date$";
-    private static final String PROMOTION_INIT_LINE_REGEX = "^.+?,\\d+,\\d+,\\d{4}(-\\d\\d){2},\\d{4}(-\\d\\d){2}$";
+    private static final String PROMOTION_INIT_LINE_REGEX = "^[^,]+?,\\d+,\\d+,\\d{4}(-\\d\\d){2},\\d{4}(-\\d\\d){2}$";
     // 상품 파일의 형식이 "name,price,quantity,promotion" 인지 확인하는 정규식
     private static final String PRODUCT_FIRST_LINE_REGEX = "^name,price,quantity,promotion$";
-    private static final String PRODUCT_INIT_LINE_REGEX = "^.+?,\\d+?,\\d+?,.+?$";
+    private static final String PRODUCT_INIT_LINE_REGEX = "^[^,]+?,\\d+?,\\d+?,[^,]+?$";
 
     public static void checkBuyInput(String input) {
         if (!input.matches(BUY_INPUT_REGEX)) {
