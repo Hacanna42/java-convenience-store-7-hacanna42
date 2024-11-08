@@ -39,6 +39,26 @@ public class View {
         });
     }
 
+    public boolean promptFreePromotion(String itemName, int freeItemCount) {
+        outputView.printFreePromotionNotice(itemName, freeItemCount);
+        return inputView.getYesOrNo();
+    }
+
+    public boolean promptInsufficientPromotion(String itemName, int notAppliedItemCount) {
+        outputView.printInsufficientPromotionNotice(itemName, notAppliedItemCount);
+        return inputView.getYesOrNo();
+    }
+
+    public boolean promptMembershipDiscount() {
+        outputView.printMembershipDiscountNotice();
+        return inputView.getYesOrNo();
+    }
+
+    public boolean promptForAdditionalItem() {
+        outputView.printAdditionalItemNotice();
+        return inputView.getYesOrNo();
+    }
+
     private String retryPrompt(Supplier<String> supplier) {
         while (true) {
             try {
