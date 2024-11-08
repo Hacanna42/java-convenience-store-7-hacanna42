@@ -2,6 +2,7 @@ package store.domain;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import store.domain.order.OrderItem;
 import store.domain.product.Product;
 
@@ -27,12 +28,23 @@ public class Stock {
             return product.isAvailableBuyQuantity(orderItem.getQuantity());
         }
 
+        // TODO: 프로모션과 비 프로모션이 두 개 검색 된 경우, 프로모션에서 먼저 처리 후 비 프로모션에서 처리하는 로직 작성
+        // TODO: 프로모션이 끝나서 비 프로모션이 두 개 검색되었다면, 둘 다 비 프로모션으로 처리해야 하는데 이 부분의 구현이 어려움.
+
         if (foundProducts.size() == 2) {
-            if (hasPromotedProduct(foundProducts)) {
-//                Product product = foundProducts.stream().filter(Product::isPromotedProduct).findFirst().get();
+            Optional<Product> optionalPromotedProduct = getPromotedProduct(foundProducts);
+            if (optionalPromotedProduct.isPresent()) {
+                // TODO: 프로모션 + 비프로모션 해결
+                Product promotedProduct = optionalPromotedProduct.get();
+                return promotedProduct.isAvailableBuyQuantity(orderItem.getQuantity());
             }
 
+            // TODO: 비프로모션 + 비프로모션 해결
+            int allStockQuantity = foundProducts.getFirst().getQuantity() + foundProducts.getLast().getQuantity();
+            return allStockQuantity >= orderItem.getQuantity();
         }
+
+        throw new RuntimeException("TODO: 에러 처리 추가 (찾아진 상품 개수가 비정상)");
         // 상품이 2개 검색된 경우 (프로모션과 비 프로모션)
 
 
@@ -57,6 +69,10 @@ public class Stock {
 
     private boolean hasPromotedProduct(List<Product> products) {
         return products.stream().anyMatch(Product::isPromotedProduct);
+    }
+
+    private Optional<Product> getPromotedProduct(List<Product> products) {
+        return products.stream().filter(Product::isPromotedProduct).findFirst();
     }
 
     private List<Product> findProductsByName(String productName) {

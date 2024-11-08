@@ -18,7 +18,7 @@ public class StoreService {
     public void proceedPurchase(Stock stock, OrderItems orderItems) {
         for (OrderItem orderItem : orderItems.getOrderItems()) {
             // 재고가 충분한지 먼저 확인
-            stock.isAvailableInStock(orderItem);
+            System.out.println("상품 " + orderItem.getItemName() +"의 재고 파악 결과: "+ stock.isAvailableInStock(orderItem));
         }
     }
 

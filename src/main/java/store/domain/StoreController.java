@@ -14,6 +14,7 @@ public class StoreController {
 
     public void run() {
         printGreetingMessage();
+        printStockStatus(stock);
         OrderItems orderItems = getOrderItems();
         storeService.proceedPurchase(stock, orderItems);
     }
@@ -25,5 +26,9 @@ public class StoreController {
 
     private void printGreetingMessage() {
         View.getInstance().printGreetingMessage();
+    }
+
+    private void printStockStatus(Stock stock) {
+        View.getInstance().printStockStatus(stock.getProducts());
     }
 }

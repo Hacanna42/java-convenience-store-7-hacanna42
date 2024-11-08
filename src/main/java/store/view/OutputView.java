@@ -10,11 +10,13 @@ class OutputView {
     }
 
     protected void printBuyRequestMessage() {
+        newLine();
         System.out.println("구매하실 상품명과 수량을 입력해 주세요.");
     }
 
     protected void printStockStatus(List<Product> products) {
         printStockNoticeMessage();
+        newLine();
         for (Product product : products) {
             System.out.println("- " + product.toString());
         }
@@ -22,5 +24,9 @@ class OutputView {
 
     private void printStockNoticeMessage() {
         System.out.println("현재 보유하고 있는 상품입니다.");
+    }
+
+    private void newLine() {
+        System.out.println();
     }
 }
