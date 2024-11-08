@@ -20,7 +20,10 @@ public class Promotion {
      * 5개를 구매하고 2+1 이벤트를 최대한 적용하여 최대 7개를 얻을수도 있다고 생각할 수 있지만, 우테코에서 제시한 실행 결과 예시에 따르면 그렇게 할 수 없다.
      * 따라서, 프로모션 재고 수가 N일때 사용자가 얻을 수 있는 최대 개수는 [N - (N % (requiredBuyCount + toGiveItemCount))] 이다.
      */
-    public int getMaxAvailableQuantity(int currentStockCount) {
+
+    // 애초에 이 메서드가 잘못된 것 같다. 일단 구매할 수 있어야 하고.. 할인을 얼마나 할지를 이후에 골라야 하는 것 아닌가
+    // 딱 알맞게 이벤트를 이용했는지 확인하는 메서드가 있어야 할 듯
+    public int getMaxAvailablePromotionQuantity(int currentStockCount) {
         return currentStockCount - (currentStockCount % (requiredBuyCount + toGiveItemCount));
     }
 

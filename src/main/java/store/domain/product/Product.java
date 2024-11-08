@@ -7,6 +7,7 @@ public class Product {
     private final int price;
     private final int quantity;
     private final Promotion promotion;
+    // TODO: 고민사항 - promotionQuantity 필드를 따로 만들어서 관리하는게 나으려나?
 
     public Product(ProductParameter productParameter, Promotion promotion) {
         this.name = productParameter.getName();
@@ -23,12 +24,22 @@ public class Product {
         return quantity;
     }
 
-    public boolean isAvailableBuyQuantity(int toBuyQuantity) {
+    public int getMaxAvailablePromotionQuantity() {
         if (isPromotedProduct()) {
-            return promotion.getMaxAvailableQuantity(quantity) >= toBuyQuantity;
+            return promotion.getMaxAvailablePromotionQuantity(quantity);
         }
+        return 0;
+    }
 
+    public boolean isStockAvailable(int toBuyQuantity) {
         return quantity >= toBuyQuantity;
+    }
+
+    public boolean isAllBuyItemCanApplyPromotion(int toBuyQuantity) {
+        if (isPromotedProduct()) {
+            return promotion.getMaxAvailablePromotionQuantity(quantity) >= toBuyQuantity;
+        }
+        return false;
     }
 
     public boolean isPromotedProduct() {
