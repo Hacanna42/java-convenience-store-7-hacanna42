@@ -31,7 +31,7 @@ public class Stock {
             }
             if (product.isPromotedProduct()) {
                 // 프로모션을 통해 공짜로 하나를 얻을 수 있는 지 고려, 프로모션 재고 부족으로 적용 못 받는 개수가 있는지 고려.
-                boolean canGetFreeItem  = product.isCanGetFreeProduct(orderItem.getQuantity());
+                boolean canGetFreeItem = product.isCanGetFreeProduct(orderItem.getQuantity());
                 int maxPromotionCanAppliedCount = product.getMaxAvailablePromotionQuantity();
                 return OrderStatus.inPromotionStock(product, canGetFreeItem, maxPromotionCanAppliedCount);
             }

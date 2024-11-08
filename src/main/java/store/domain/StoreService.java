@@ -20,6 +20,8 @@ public class StoreService {
         for (OrderItem orderItem : orderItems.getOrderItems()) {
             OrderStatus orderStatus = stock.getOrderStatus(orderItem);
 
+            // 리팩토링 예정: 객체를 객체답게.
+
             if (!orderStatus.isInStock()) {
                 // 재고에 없는 상품 안내
                 System.out.println("재고 없음");

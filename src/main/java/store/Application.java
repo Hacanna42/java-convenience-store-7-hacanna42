@@ -7,7 +7,6 @@ import store.util.StoreInitializer;
 
 public class Application {
     public static void main(String[] args) {
-        // 재고 초기화
         StoreInitializer storeInitializer = new StoreInitializer();
         Stock stock = storeInitializer.initStock();
 
