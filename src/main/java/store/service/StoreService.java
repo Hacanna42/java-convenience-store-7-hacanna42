@@ -8,6 +8,7 @@ import store.domain.Stock;
 import store.domain.order.OrderItem;
 import store.domain.order.OrderItems;
 import store.domain.order.OrderStatus;
+import store.view.View;
 
 public class StoreService {
     private static final String ORDER_ITEM_PATTERN_REGEX = "\\[(.+)-(\\d+)]";
@@ -24,17 +25,17 @@ public class StoreService {
 
             if (!orderStatus.isInStock()) {
                 // 재고에 없는 상품 안내
-                System.out.println("재고 없음");
+                System.out.println("재고에 없는 상품 안내 추가 예정");
             }
 
             if (orderStatus.isCanGetFreeItem()) {
                 // 무료 상품 안내
-                System.out.println("무료로 하나 받아갈 수 있음.");
+                View.getInstance().promptFreePromotion(orderItem.getItemName(), 1);
             }
 
             if (orderStatus.isMultipleStock()) {
                 if (orderStatus.getNotAppliedItemCount(orderItem.getQuantity()) > 0) {
-                    System.out.println("상품 " + orderStatus.getNotAppliedItemCount(orderItem.getQuantity()) + "개는 프로모션을 적용받지 못함.");
+                    View.getInstance().promptInsufficientPromotion(orderItem.getItemName(), orderStatus.getNotAppliedItemCount(orderItem.getQuantity()));
                 }
             }
         }
@@ -53,7 +54,6 @@ public class StoreService {
             if (matcher.matches()) {
                 String name = matcher.group(1);
                 int quantity = Integer.parseInt(matcher.group(2));
-                System.out.println("New Order Item: " + name + ", " + quantity);
                 OrderItem orderItem = new OrderItem(name, quantity);
                 orderItems.add(orderItem);
             }
