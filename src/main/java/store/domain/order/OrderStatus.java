@@ -1,4 +1,4 @@
-package store.domain;
+package store.domain.order;
 
 import java.util.List;
 import store.domain.product.Product;
@@ -21,7 +21,30 @@ public class OrderStatus {
         this.inStock = inStock;
     }
 
-    public static OrderStatus inMultipleProductStock(List<Product> products) {
+    public boolean isCanGetFreeItem() {
+        return canGetFreeItem;
+    }
+
+    public boolean isInStock() {
+        return inStock;
+    }
+
+    public int getAppliedPromotionCount() {
+        return promotionCanAppliedCount;
+    }
+
+    public int getNotAppliedItemCount(int quantity) {
+        if (promotionCanAppliedCount < quantity) {
+            return quantity - promotionCanAppliedCount;
+        }
+        return 0;
+    }
+
+    public boolean isMultipleStock() {
+        return products.size() == 2;
+    }
+
+    public static OrderStatus inMultipleNormalProductStock(List<Product> products) {
         return new OrderStatus(products, true);
     }
 

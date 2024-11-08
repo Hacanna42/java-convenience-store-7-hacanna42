@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import store.domain.order.OrderItem;
+import store.domain.order.OrderStatus;
 import store.domain.product.Product;
 
 public class Stock {
@@ -53,11 +54,15 @@ public class Stock {
                     int maxPromotionCanAppliedCount = promotedProduct.getMaxAvailablePromotionQuantity();
                     return OrderStatus.inPromotionStock(promotedProduct, canGetFreeItem, maxPromotionCanAppliedCount);
                 }
+
+                // 프로모션 제품 재고만으로 처리 불가능할 때
+                // 프로모션 재고는 일단 다 쓰고, 나머지 양은 비프로모션 재고로 해야 함
+                int maxPromotionCanAppliedCount = promotedProduct.getMaxAvailablePromotionQuantity();
+                return new OrderStatus(foundProducts, true, false, maxPromotionCanAppliedCount);
             }
 
-            // 프로모션 제품 재고만으로 처리 불가능하면
-            // 프로모션 제품 재고로 일단 처리하고... 나머지는 일반 재고에서 처리하도록
-            return OrderStatus.inMultipleProductStock(foundProducts);
+            // 비-프로모션 제품 재고만 있을 때
+            return OrderStatus.inMultipleNormalProductStock(foundProducts);
         }
 
         throw new RuntimeException("TODO: ..에러 추가");
