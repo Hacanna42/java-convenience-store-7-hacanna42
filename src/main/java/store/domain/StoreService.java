@@ -35,7 +35,6 @@ public class StoreService {
                     System.out.println("상품 " + orderStatus.getNotAppliedItemCount(orderItem.getQuantity()) + "개는 프로모션을 적용받지 못함.");
                 }
             }
-
         }
     }
 
