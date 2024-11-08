@@ -1,5 +1,7 @@
-package store.domain;
+package store.controller;
 
+import store.domain.Stock;
+import store.service.StoreService;
 import store.domain.order.OrderItems;
 import store.view.View;
 

@@ -1,8 +1,8 @@
 package store;
 
 import store.domain.Stock;
-import store.domain.StoreController;
-import store.domain.StoreService;
+import store.controller.StoreController;
+import store.service.StoreService;
 import store.util.StoreInitializer;
 
 public class Application {
