@@ -3,8 +3,8 @@ package store.domain.promotion;
 import java.time.LocalDateTime;
 
 public class Period {
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
 
     public Period(LocalDateTime startDate, LocalDateTime endDate) {
         this.startDate = startDate;

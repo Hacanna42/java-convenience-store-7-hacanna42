@@ -4,10 +4,10 @@ import java.util.List;
 import store.domain.product.Product;
 
 public class OrderStatus {
-    private List<Product> products;
-    private boolean inStock;
-    private boolean canGetFreeItem;
-    private int promotionCanAppliedCount;
+    private final List<Product> products;
+    private final boolean inStock;
+    private final boolean canGetFreeItem;
+    private final int promotionCanAppliedCount;
 
     public OrderStatus(List<Product> products, boolean inStock, boolean canGetFreeItem, int promotionCanAppliedCount) {
         this.products = products;
@@ -17,8 +17,7 @@ public class OrderStatus {
     }
 
     public OrderStatus(List<Product> products, boolean inStock) {
-        this.products = products;
-        this.inStock = inStock;
+        this(products, inStock, false, 0);
     }
 
     public boolean isCanGetFreeItem() {

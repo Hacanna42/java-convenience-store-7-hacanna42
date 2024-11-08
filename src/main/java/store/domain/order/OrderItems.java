@@ -3,7 +3,7 @@ package store.domain.order;
 import java.util.List;
 
 public class OrderItems {
-    private List<OrderItem> orderItems;
+    private final List<OrderItem> orderItems;
 
     public OrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;

@@ -3,10 +3,10 @@ package store.domain.promotion;
 import camp.nextstep.edu.missionutils.DateTimes;
 
 public class Promotion {
-    private String promotionName;
-    private int requiredBuyCount;
-    private int toGiveItemCount;
-    private Period period;
+    private final String promotionName;
+    private final int requiredBuyCount;
+    private final int toGiveItemCount;
+    private final Period period;
 
     public Promotion(PromotionParameter promotionParameter) {
         this.promotionName = promotionParameter.getPromotionName();

@@ -1,7 +1,6 @@
 package store.view;
 
 import java.util.List;
-import store.domain.Stock;
 import store.domain.product.Product;
 
 class OutputView {

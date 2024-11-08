@@ -25,7 +25,7 @@ public class PromotionParameter {
         }
     }
 
-    List<String> promotionParameters;
+    private final List<String> promotionParameters;
 
     public PromotionParameter(List<String> promotionParameters) {
         this.promotionParameters = promotionParameters;
