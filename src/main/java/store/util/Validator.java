@@ -2,7 +2,7 @@ package store.util;
 
 public class Validator {
     // 상품명, 수량은 하이픈(-)으로, 개별 상품은 대괄호([])로 묶어 쉼표(,)로 구분되어 있는지 확인하는 정규식
-    private static final String BUY_INPUT_REGEX = "^(\\[.+?-\\d+?],)*\\[.+?-\\d+?]$";
+    private static final String BUY_INPUT_REGEX = "^(\\[[^,\\[\\]]+?-\\d+?],)*\\[[^,\\[\\]]+?-\\d+?]$";
     // 프로모션 파일의 형식이 "name,buy,get,start_date,end_date" 인지 확인하는 정규식
     private static final String PROMOTION_FIRST_LINE_REGEX = "^name,buy,get,start_date,end_date$";
     private static final String PROMOTION_INIT_LINE_REGEX = "^.+?,\\d+,\\d+,\\d{4}(-\\d\\d){2},\\d{4}(-\\d\\d){2}$";
