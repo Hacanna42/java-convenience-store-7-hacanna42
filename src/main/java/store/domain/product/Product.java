@@ -24,11 +24,20 @@ public class Product {
         return quantity;
     }
 
+    // 최대 적용 가능한 프로모션 상품 개수를 반환하는 함수
     public int getMaxAvailablePromotionQuantity() {
         if (isPromotedProduct()) {
             return promotion.getMaxAvailablePromotionQuantity(quantity);
         }
         return 0;
+    }
+
+    // 프로모션을 통해 무료로 받을 수 있는 상품이 존재하는지 확인하는 함수
+    public boolean isCanGetFreeProduct(int buyQuantity) {
+        if (!isPromotedProduct()) {
+            return false;
+        }
+        return promotion.getRequiredBuyCount() == buyQuantity;
     }
 
     public boolean isStockAvailable(int toBuyQuantity) {

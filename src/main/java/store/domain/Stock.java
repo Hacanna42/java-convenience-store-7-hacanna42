@@ -17,6 +17,51 @@ public class Stock {
         return stock;
     }
 
+    public OrderStatus getOrderStatus(OrderItem orderItem) {
+        List<Product> foundProducts = findProductsByName(orderItem.getItemName());
+        if (foundProducts.isEmpty()) {
+            return OrderStatus.outOfStock();
+        }
+
+        if (foundProducts.size() == 1) {
+            Product product = foundProducts.getFirst();
+            if (!product.isStockAvailable(orderItem.getQuantity())) {
+                return OrderStatus.outOfStock();
+            }
+            if (product.isPromotedProduct()) {
+                // 프로모션을 통해 공짜로 하나를 얻을 수 있는 지 고려, 프로모션 재고 부족으로 적용 못 받는 개수가 있는지 고려.
+                boolean canGetFreeItem  = product.isCanGetFreeProduct(orderItem.getQuantity());
+                int maxPromotionCanAppliedCount = product.getMaxAvailablePromotionQuantity();
+                return OrderStatus.inPromotionStock(product, canGetFreeItem, maxPromotionCanAppliedCount);
+            }
+            // 프로모션 제품이 아닌 경우
+            return OrderStatus.inNormalStock(product);
+        }
+
+        if (foundProducts.size() == 2) {
+            int allProductCountInStock = foundProducts.getFirst().getQuantity() + foundProducts.getLast().getQuantity();
+            if (allProductCountInStock < orderItem.getQuantity()) { // 모든 상품을 합쳐도 재고 부족일 경우
+                return OrderStatus.outOfStock();
+            }
+
+            // 하나는 프로모션 적용 가능 제품인 경우: 프로모션 안에서만 처리 가능한지 체크
+            if (hasPromotedProduct(foundProducts)) {
+                // 프로모션을 통해 공짜로 하나를 얻을 수 있는 지 고려, 프로모션 재고 부족으로 적용 못 받는 개수가 있는지 고려.
+                Product promotedProduct = getPromotedProduct(foundProducts).get();
+                if (promotedProduct.isStockAvailable(orderItem.getQuantity())) { // 프로모션 제품 재고만으로 처리 가능하면
+                    boolean canGetFreeItem = promotedProduct.isCanGetFreeProduct(orderItem.getQuantity());
+                    int maxPromotionCanAppliedCount = promotedProduct.getMaxAvailablePromotionQuantity();
+                    return OrderStatus.inPromotionStock(promotedProduct, canGetFreeItem, maxPromotionCanAppliedCount);
+                }
+            }
+
+            // 프로모션 제품 재고만으로 처리 불가능하면
+            // 프로모션 제품 재고로 일단 처리하고... 나머지는 일반 재고에서 처리하도록
+            return OrderStatus.inMultipleProductStock(foundProducts);
+        }
+
+        throw new RuntimeException("TODO: ..에러 추가");
+    }
 
     // isAvailableInStock 의 책임: 재고가 있는지 체크한다. (어떤 방식으로든 구매가 가능한지)
     public boolean isAvailableInStock(OrderItem orderItem) {
@@ -35,31 +80,16 @@ public class Stock {
         throw new RuntimeException("TODO: 검색된 상품 에러 안내 추가");
     }
 
-
-    /* 프로모션 관계 없이 해당 상품 수량 부족시 구매 실패 처리
-     * 1. 찾아진 상품이 0개인 경우: 상품 없음.
-     * 2. 찾아진 상품이 1개인 경우: 프로모션 상품인가? 비프로모션 상품인가?
-     * 2-1. 프로모션 상품인 경우: 수량을 체크한다.
-     * 2-1-1. 수량이 충분한 경우: 구매
-     * 2-1-2. 수량이 불충분한 경우: 구매 실패
-     *
-     * 2-2. 비프로모션 상품인 경우: 수량을 체크한다.
-     * 2-2-1. 수량이 충분한 경우: 구매
-     * 2-2-2. 수량이 불충분한 경우: 구매 실패
-     *
-     * 3. 찾아진 상품이 2개인 경우: 프로모션 상품과 비 프로모션 상품이 같이 있는 경우. (우테코 본문: 동일 상품에 여러 프로모션이 적용되지 않는다)
-     * 3-1. 프로모션 상품의 수량을 체크한다
-     * 3-1-1. 프로모션 상품의 수량이 충분한 경우: 구매
-     * 3-1-2. 프로모션 상품의 수량이 불충분한 경우: 최대한 받을 수 있는 개수 계산 (예를 들어 2+1 콜라가 7개라면 6개까지밖에 적용을 못 받음 6+3으로)
-     * 3-1-3. 나머지 개수를 비프로모션 재고로 커버할 수 있는지 파악한다. 커버 가능하다면 결제 성공, 불가능하다면 실패.
-     */
-
     private boolean hasPromotedProduct(List<Product> products) {
         return products.stream().anyMatch(Product::isPromotedProduct);
     }
 
     private Optional<Product> getPromotedProduct(List<Product> products) {
         return products.stream().filter(Product::isPromotedProduct).findFirst();
+    }
+
+    private Optional<Product> getNotPromotedProduct(List<Product> products) {
+        return products.stream().filter(product -> !product.isPromotedProduct()).findFirst();
     }
 
     private List<Product> findProductsByName(String productName) {

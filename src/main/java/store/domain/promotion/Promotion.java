@@ -21,14 +21,17 @@ public class Promotion {
      * 따라서, 프로모션 재고 수가 N일때 사용자가 얻을 수 있는 최대 개수는 [N - (N % (requiredBuyCount + toGiveItemCount))] 이다.
      */
 
-    // 애초에 이 메서드가 잘못된 것 같다. 일단 구매할 수 있어야 하고.. 할인을 얼마나 할지를 이후에 골라야 하는 것 아닌가
-    // 딱 알맞게 이벤트를 이용했는지 확인하는 메서드가 있어야 할 듯
+    // 딱 알맞게 프로모션을 적용받을 수 있는 최대 상품 개수를 구하는 메서드
     public int getMaxAvailablePromotionQuantity(int currentStockCount) {
         return currentStockCount - (currentStockCount % (requiredBuyCount + toGiveItemCount));
     }
 
     public String getPromotionName() {
         return promotionName;
+    }
+
+    public int getRequiredBuyCount() {
+        return requiredBuyCount;
     }
 
     public boolean isAvailablePromotion() {
