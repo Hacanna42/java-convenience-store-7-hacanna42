@@ -20,12 +20,24 @@ public class OrderStatus {
         this(products, inStock, false, 0);
     }
 
+    public Product getSingleProduct() {
+        return products.getFirst();
+    }
+
+    public List<Product> getMultipleProducts() {
+        return products;
+    }
+
     public boolean isCanGetFreeItem() {
         return canGetFreeItem;
     }
 
     public boolean isInStock() {
         return inStock;
+    }
+
+    public boolean hasPromotionProduct() {
+        return products.stream().anyMatch(Product::isPromotedProduct);
     }
 
     public int getAppliedPromotionCount() {

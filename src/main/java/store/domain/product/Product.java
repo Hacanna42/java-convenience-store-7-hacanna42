@@ -5,7 +5,7 @@ import store.domain.promotion.Promotion;
 public class Product {
     private final String name;
     private final int price;
-    private final int quantity;
+    private int quantity;
     private final Promotion promotion;
     // TODO: 고민사항 - promotionQuantity 필드를 따로 만들어서 관리하는게 나으려나?
 
@@ -22,6 +22,22 @@ public class Product {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void sell(int amount) {
+        quantity -= amount;
+    }
+
+    public int getRegularPurchasePrice(int amount) {
+        return amount * price;
+    }
+
+    public int getPurchasePrice(int amount) {
+        int regularPrice = amount * price;
+        if (isPromotedProduct()) {
+            return regularPrice - promotion.getDiscountPrice(amount, price);
+        }
+        return regularPrice;
     }
 
     // 최대 적용 가능한 프로모션 상품 개수를 반환하는 함수

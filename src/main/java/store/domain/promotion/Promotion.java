@@ -37,4 +37,9 @@ public class Promotion {
     public boolean isAvailablePromotion() {
         return period.isBetweenPeriod(DateTimes.now());
     }
+
+    public int getDiscountPrice(int buyQuantity, int regularPrice) {
+        int freeItemCount = buyQuantity / (requiredBuyCount + toGiveItemCount);
+        return freeItemCount * regularPrice;
+    }
 }

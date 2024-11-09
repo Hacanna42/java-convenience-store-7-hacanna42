@@ -39,6 +39,11 @@ public class View {
         });
     }
 
+    public boolean promptOutOfStock(String itemName) {
+        outputView.printOutOfStockNotice(itemName);
+        return inputView.getYesOrNo();
+    }
+
     public boolean promptFreePromotion(String itemName, int freeItemCount) {
         outputView.printFreePromotionNotice(itemName, freeItemCount);
         return inputView.getYesOrNo();
