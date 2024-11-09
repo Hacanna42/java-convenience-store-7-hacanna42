@@ -9,7 +9,8 @@ public enum ErrorMessage {
     INVALID_PRODUCT_FILE_FORM("올바르지 않은 products.md 형식입니다."),
     INVALID_PRODUCT_NAME("존재하지 않는 상품입니다. 다시 입력해 주세요."),
     INVALID_PRODUCT_PROMOTIONS("products.md 파일의 형식에 문제가 있습니다. 동일 상품에 여러 프로모션이 적용될 수 없습니다."),
-    OVER_STOCK("재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+    OVER_STOCK("재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요."),
+    FILE_NOT_FOUND("편의점 구성 파일을 찾을 수 없습니다. 프로그램을 종료합니다.");
 
     private static final String ERROR_PREFIX = "[ERROR] ";
     private final String message;

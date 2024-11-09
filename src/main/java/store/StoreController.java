@@ -3,7 +3,6 @@ package store;
 import store.domain.Stock;
 import store.domain.receipt.Receipt;
 import store.domain.order.OrderItems;
-import store.messages.ErrorMessage;
 import store.view.View;
 
 public class StoreController {

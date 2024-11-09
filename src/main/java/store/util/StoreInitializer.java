@@ -16,13 +16,9 @@ import store.domain.product.ProductParameter;
 public class StoreInitializer {
     private Promotions promotions;
 
-    public Stock initStock() {
-        try {
-            promotions = readPromotionFile();
-            return readProductFile();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("TODO: 프로그램을 종료해야 하는 Exception 처리 추가");
-        }
+    public Stock initStock() throws FileNotFoundException {
+        promotions = readPromotionFile();
+        return readProductFile();
     }
 
     private Promotions readPromotionFile() throws FileNotFoundException {
