@@ -26,6 +26,7 @@ class OutputView {
         // 구매한 상품 출력
         for (BuyItem item : receipt.getBuyItems()) {
             System.out.printf(ReceiptForm.BUY_ITEMS.getMessage(), item.getName(), item.getQuantity(), item.getTotalPrice());
+
         }
 
         System.out.println(ReceiptForm.PROMOTION_DIVIDER.getMessage());
@@ -60,16 +61,19 @@ class OutputView {
             System.out.printf(StoreMessage.STOCK_STATUS_NO_STOCK.getMessage(), product.getName(), product.getPrice(),
                     product.getPromotionName());
         }
+        System.out.flush();
     }
 
     protected void printFreePromotionNotice(String itemName, int freeItemCount) {
         newLine();
         System.out.printf(StoreMessage.ASK_FREE_PROMOTION.getMessage(), itemName, freeItemCount);
+        System.out.flush();
     }
 
     protected void printInsufficientPromotionNotice(String itemName, int notAppliedItemCount) {
         newLine();
         System.out.printf(StoreMessage.ASK_INSUFFICIENT_PROMOTION.getMessage(), itemName, notAppliedItemCount);
+        System.out.flush();
     }
 
     protected void printMembershipDiscountNotice() {
