@@ -7,7 +7,6 @@ public class Product {
     private final int price;
     private int quantity;
     private final Promotion promotion;
-    // TODO: 고민사항 - promotionQuantity 필드를 따로 만들어서 관리하는게 나으려나?
 
     public Product(ProductParameter productParameter, Promotion promotion) {
         this.name = productParameter.getName();
