@@ -1,4 +1,4 @@
-package store.service;
+package store;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,6 @@ import store.domain.order.OrderItem;
 import store.domain.order.OrderItems;
 import store.domain.order.OrderStatus;
 import store.domain.order.service.OrderService;
-import store.domain.receipt.BuyItems;
 import store.domain.receipt.Receipt;
 import store.view.View;
 

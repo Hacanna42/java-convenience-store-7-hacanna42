@@ -1,8 +1,7 @@
-package store.controller;
+package store;
 
 import store.domain.Stock;
 import store.domain.receipt.Receipt;
-import store.service.StoreService;
 import store.domain.order.OrderItems;
 import store.view.View;
 
@@ -17,16 +16,32 @@ public class StoreController {
 
     public void run() {
         do {
-            printGreetingMessage();
-            printStockStatus(stock);
-            OrderItems orderItems = getOrderItems();
-            try {
-                Receipt receipt = storeService.proceedPurchase(stock, orderItems);
-                View.getInstance().printReceipt(receipt);
-            } catch (IllegalStateException illegalStateException) {
-                View.getInstance().printOutOfStock();
-            }
-        } while(askContinueShopping());
+            runStoreProcess();
+        } while (askContinueShopping());
+    }
+
+    private void runStoreProcess() {
+        printGreetingMessage();
+        printStockStatus(stock);
+        OrderItems orderItems = getOrderItems();
+        try {
+            Receipt receipt = proceedPurchase(orderItems);
+            printReceipt(receipt);
+        } catch (IllegalStateException illegalStateException) {
+            printOutOfStock();
+        }
+    }
+
+    private Receipt proceedPurchase(OrderItems orderItems) {
+        return storeService.proceedPurchase(stock, orderItems);
+    }
+
+    private void printOutOfStock() {
+        View.getInstance().printOutOfStock();
+    }
+
+    private void printReceipt(Receipt receipt) {
+        View.getInstance().printReceipt(receipt);
     }
 
     private boolean askContinueShopping() {
