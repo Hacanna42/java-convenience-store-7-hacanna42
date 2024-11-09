@@ -1,6 +1,7 @@
 package store.domain.receipt;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Receipt {
@@ -14,10 +15,6 @@ public class Receipt {
     public Receipt() {
         this.buyItems = new BuyItems(new ArrayList<>());
         this.freeItems = new FreeItems(new ArrayList<>());
-    }
-
-    public boolean hasPurchased() {
-        return totalPrice != 0;
     }
 
     public int getTotalQuantity() {
@@ -40,14 +37,32 @@ public class Receipt {
         return (totalPrice - totalPromotionDiscount) - membershipDiscount;
     }
 
+    public List<BuyItem> getBuyItems() {
+        return Collections.unmodifiableList(buyItems.getBuyItems());
+    }
+
+    public List<FreeItem> getFreeItems() {
+        return Collections.unmodifiableList(freeItems.getFreeItems());
+    }
+
+    public boolean hasPurchased() {
+        return totalPrice != 0;
+    }
+
+    public boolean hasFreeItem() {
+        return totalPromotionDiscount > 0;
+    }
+
     public void addBuyItem(BuyItem buyItem) {
         buyItems.add(buyItem);
         totalPrice += buyItem.getTotalPrice();
     }
 
     public void addFreeItem(FreeItem freeItem) {
-        freeItems.add(freeItem);
-        totalPromotionDiscount += freeItem.getTotalDiscount();
+        if (freeItem.getQuantity() > 0) {
+            freeItems.add(freeItem);
+            totalPromotionDiscount += freeItem.getTotalDiscount();
+        }
     }
 
     public void addPriceOfPromotionItem(int price) {
@@ -57,13 +72,5 @@ public class Receipt {
     public void applyMembershipDiscount() {
         int totalPriceOfNormalItems = totalPrice - totalPriceOfPromotionItem;
         membershipDiscount = (int) (totalPriceOfNormalItems * 0.3);
-    }
-
-    public List<BuyItem> getBuyItems() {
-        return buyItems.getBuyItems();
-    }
-
-    public List<FreeItem> getFreeItems() {
-        return freeItems.getFreeItems();
     }
 }

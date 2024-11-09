@@ -36,11 +36,12 @@ class OutputView {
             System.out.printf(ReceiptForm.BUY_ITEMS.getMessage(), item.getName(), item.getQuantity(),
                     item.getTotalPrice());
         }
-
-        System.out.println(ReceiptForm.PROMOTION_DIVIDER.getMessage());
-        // 증정 상품 출력
-        for (FreeItem item : receipt.getFreeItems()) {
-            System.out.printf(ReceiptForm.PROMOTION_ITEMS.getMessage(), item.getName(), item.getQuantity());
+        if (receipt.hasFreeItem()) {
+            System.out.println(ReceiptForm.PROMOTION_DIVIDER.getMessage());
+            // 증정 상품 출력
+            for (FreeItem item : receipt.getFreeItems()) {
+                System.out.printf(ReceiptForm.PROMOTION_ITEMS.getMessage(), item.getName(), item.getQuantity());
+            }
         }
     }
 

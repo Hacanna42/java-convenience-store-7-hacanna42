@@ -3,6 +3,7 @@ package store.domain.product;
 import store.domain.promotion.Promotion;
 
 public class Product {
+    private static final int MINIMUM_QUANTITY_TO_PROMOTION = 1;
     private final String name;
     private final int price;
     private int quantity;
@@ -70,7 +71,7 @@ public class Product {
         if (!isPromotedProduct()) {
             return false;
         }
-        return promotion.getRequiredBuyCount() == buyQuantity;
+        return promotion.getRequiredBuyCount() == buyQuantity && quantity > MINIMUM_QUANTITY_TO_PROMOTION;
     }
 
     public boolean isStockAvailable(int toBuyQuantity) {
