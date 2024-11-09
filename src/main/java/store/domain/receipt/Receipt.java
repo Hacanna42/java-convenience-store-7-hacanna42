@@ -6,8 +6,8 @@ public class Receipt {
     private final BuyItems buyItems;
     private final FreeItems freeItems;
     private int totalPrice;
+    private int totalPriceOfPromotionItem;
     private int promotionDiscount;
-    private int membershipDiscount;
 
     public Receipt() {
         this.buyItems = new BuyItems(new ArrayList<>());
@@ -22,5 +22,9 @@ public class Receipt {
     public void addFreeItem(FreeItem freeItem) {
         freeItems.add(freeItem);
         promotionDiscount += freeItem.getTotalDiscount();
+    }
+
+    public void addPriceOfPromotionItem(int price) {
+        totalPriceOfPromotionItem += price;
     }
 }

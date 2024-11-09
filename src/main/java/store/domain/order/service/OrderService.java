@@ -44,6 +44,7 @@ public class OrderService {
         promotionProduct.sell(maxQuantityOfPromotionProduct);
         remainBuyQuantity -= maxQuantityOfPromotionProduct;
         currentRegularPrice += promotionProduct.getRegularPurchasePrice(maxQuantityOfPromotionProduct);
+        receipt.addPriceOfPromotionItem(promotionProduct.getRegularPurchasePrice(maxQuantityOfPromotionProduct));
 
         notPromotionProduct.sell(remainBuyQuantity);
         currentRegularPrice += notPromotionProduct.getRegularPurchasePrice(remainBuyQuantity);
@@ -93,6 +94,7 @@ public class OrderService {
             int discountedPrice = product.getPromotionDiscountPrice(buyQuantity);
             FreeItem freeItem = new FreeItem(orderItem.getItemName(), discountedAmount, discountedPrice);
             receipt.addFreeItem(freeItem);
+            receipt.addPriceOfPromotionItem(product.getRegularPurchasePrice(buyQuantity));
         }
 
         product.sell(buyQuantity);
