@@ -44,6 +44,10 @@ class OutputView {
         newLine();
     }
 
+    protected void printNoReceiptNotice() {
+        System.out.println(StoreMessage.NO_PURCHASE_NOTICE.getMessage());
+    }
+
     protected void printBuyRequestMessage() {
         newLine();
         System.out.println(StoreMessage.BUY_REQUEST.getMessage());

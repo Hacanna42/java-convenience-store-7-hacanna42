@@ -16,6 +16,10 @@ public class Receipt {
         this.freeItems = new FreeItems(new ArrayList<>());
     }
 
+    public boolean hasPurchased() {
+        return totalPrice != 0;
+    }
+
     public int getTotalQuantity() {
         return buyItems.getTotalQuantity();
     }

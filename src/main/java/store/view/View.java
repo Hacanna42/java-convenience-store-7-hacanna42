@@ -35,6 +35,10 @@ public class View {
     }
 
     public void printReceipt(Receipt receipt) {
+        if (!receipt.hasPurchased()) {
+            outputView.printNoReceiptNotice();
+            return;
+        }
         outputView.printReceipt(receipt);
     }
 
