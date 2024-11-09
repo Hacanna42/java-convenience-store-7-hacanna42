@@ -22,37 +22,34 @@ public class OrderService {
 
     private void purchaseMultipleStock(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
         if (orderStatus.hasPromotionProduct()) {
-            purchasePromotionAndNormalStock(orderStatus, orderItem, receipt);
+            purchaseMixedStock(orderStatus, orderItem, receipt);
             return;
         }
         purchaseMultipleNormalStock(orderStatus, orderItem, receipt);
     }
 
-    private void purchasePromotionAndNormalStock(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
+    private void purchaseMixedStock(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
         List<Product> products = orderStatus.getMultipleProducts();
         Product promotionProduct = products.stream().filter(Product::isPromotedProduct).findFirst().get();
         Product notPromotionProduct = products.stream().filter(product -> !product.isPromotedProduct()).findFirst()
                 .get();
 
-        int currentRegularPrice = 0;
+        updateReceiptInMixedProducts(orderItem, receipt, promotionProduct, notPromotionProduct);
+    }
+
+    private static void updateReceiptInMixedProducts(OrderItem orderItem, Receipt receipt, Product promotionProduct,
+                                                     Product notPromotionProduct) {
         int maxQuantityOfPromotionProduct = promotionProduct.getQuantity();
-        int remainBuyQuantity = orderItem.getQuantity();
 
         promotionProduct.sell(maxQuantityOfPromotionProduct);
-        remainBuyQuantity -= maxQuantityOfPromotionProduct;
-        currentRegularPrice += promotionProduct.getRegularPurchasePrice(maxQuantityOfPromotionProduct);
+        notPromotionProduct.sell(orderItem.getQuantity() - maxQuantityOfPromotionProduct);
+
         receipt.addPriceOfPromotionItem(promotionProduct.getRegularPurchasePrice(maxQuantityOfPromotionProduct));
-
-        notPromotionProduct.sell(remainBuyQuantity);
-        currentRegularPrice += notPromotionProduct.getRegularPurchasePrice(remainBuyQuantity);
-
-        BuyItem buyItem = new BuyItem(orderItem.getItemName(), orderItem.getQuantity(), currentRegularPrice);
-        FreeItem freeItem = new FreeItem(orderItem.getItemName(),
+        receipt.addBuyItem(new BuyItem(orderItem.getItemName(), orderItem.getQuantity(),
+                promotionProduct.getRegularPurchasePrice(orderItem.getQuantity())));
+        receipt.addFreeItem(new FreeItem(orderItem.getItemName(),
                 promotionProduct.getPromotionDiscountAmount(maxQuantityOfPromotionProduct),
-                promotionProduct.getPromotionDiscountPrice(maxQuantityOfPromotionProduct));
-
-        receipt.addBuyItem(buyItem);
-        receipt.addFreeItem(freeItem);
+                promotionProduct.getPromotionDiscountPrice(maxQuantityOfPromotionProduct)));
     }
 
     private void purchaseMultipleNormalStock(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {

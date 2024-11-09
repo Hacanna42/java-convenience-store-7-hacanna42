@@ -20,19 +20,24 @@ public class Stock {
     }
 
     public OrderStatus getOrderStatus(OrderItem orderItem) {
-        List<Product> foundProducts = findAvailableProductsByName(orderItem.getItemName());
-        return checkOrderAvailability(orderItem, foundProducts);
-    }
-
-    private OrderStatus checkOrderAvailability(OrderItem orderItem, List<Product> foundProducts) {
+        List<Product> foundProducts = findProductsByName(orderItem.getItemName());
         if (foundProducts.isEmpty()) {
             return OrderStatus.outOfStock(foundProducts);
         }
-        if (foundProducts.size() == 1) {
-            return getOrderStatusWithSingleProduct(orderItem, foundProducts.getFirst());
+
+        return checkOrderAvailability(orderItem, findAvailableProductsByName(orderItem.getItemName()));
+    }
+
+    private OrderStatus checkOrderAvailability(OrderItem orderItem, List<Product> foundAvailableProducts) {
+        if (foundAvailableProducts.isEmpty()) {
+            return OrderStatus.outOfStock(findProductsByName(orderItem.getItemName()));
         }
-        if (foundProducts.size() == 2) {
-            return getOrderStatusWithMultipleProducts(orderItem, foundProducts);
+
+        if (foundAvailableProducts.size() == 1) {
+            return getOrderStatusWithSingleProduct(orderItem, foundAvailableProducts.getFirst());
+        }
+        if (foundAvailableProducts.size() == 2) {
+            return getOrderStatusWithMultipleProducts(orderItem, foundAvailableProducts);
         }
 
         throw new IllegalArgumentException(ErrorMessage.INVALID_PRODUCT_PROMOTIONS.getMessage());
@@ -89,8 +94,14 @@ public class Stock {
         return products.getFirst().getQuantity() + products.getLast().getQuantity();
     }
 
+    private List<Product> findProductsByName(String productName) {
+        return stock.stream().filter(product -> Objects.equals(product.getName(), productName)).toList();
+    }
+
     private List<Product> findAvailableProductsByName(String productName) {
         return stock.stream().filter(product -> Objects.equals(product.getName(), productName))
                 .filter(product -> product.getQuantity() > 0).toList();
     }
+
+
 }
