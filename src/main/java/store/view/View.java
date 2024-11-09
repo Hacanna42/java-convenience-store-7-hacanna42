@@ -30,8 +30,8 @@ public class View {
         return continueShopping;
     }
 
-    public void printOutOfStock() {
-        outputView.printOutOfStockNotice();
+    public void printErrorMessage(String errorMessage) {
+        outputView.printErrorMessage(errorMessage);
     }
 
     public void printReceipt(Receipt receipt) {

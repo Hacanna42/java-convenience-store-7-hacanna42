@@ -3,6 +3,7 @@ package store;
 import store.domain.Stock;
 import store.domain.receipt.Receipt;
 import store.domain.order.OrderItems;
+import store.messages.ErrorMessage;
 import store.view.View;
 
 public class StoreController {
@@ -27,8 +28,8 @@ public class StoreController {
         try {
             Receipt receipt = proceedPurchase(orderItems);
             printReceipt(receipt);
-        } catch (IllegalStateException illegalStateException) {
-            printOutOfStock();
+        } catch (Exception e) {
+            printErrorMessage(e.getMessage());
         }
     }
 
@@ -36,8 +37,8 @@ public class StoreController {
         return storeService.proceedPurchase(stock, orderItems);
     }
 
-    private void printOutOfStock() {
-        View.getInstance().printOutOfStock();
+    private void printErrorMessage(String errorMessage) {
+        View.getInstance().printErrorMessage(errorMessage);
     }
 
     private void printReceipt(Receipt receipt) {

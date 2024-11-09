@@ -6,6 +6,7 @@ import java.util.Optional;
 import store.domain.order.OrderItem;
 import store.domain.order.OrderStatus;
 import store.domain.product.Product;
+import store.messages.ErrorMessage;
 
 public class Stock {
     private final List<Product> stock;
@@ -19,15 +20,15 @@ public class Stock {
     }
 
     public OrderStatus getOrderStatus(OrderItem orderItem) {
-        List<Product> foundProducts = findProductsByName(orderItem.getItemName());
+        List<Product> foundProducts = findAvailableProductsByName(orderItem.getItemName());
         if (foundProducts.isEmpty()) {
-            return OrderStatus.outOfStock();
+            return OrderStatus.outOfStock(foundProducts);
         }
 
         if (foundProducts.size() == 1) {
             Product product = foundProducts.getFirst();
             if (!product.isStockAvailable(orderItem.getQuantity())) {
-                return OrderStatus.outOfStock();
+                return OrderStatus.outOfStock(List.of(product));
             }
             if (product.isPromotedProduct()) {
                 // 프로모션을 통해 공짜로 하나를 얻을 수 있는 지 고려, 프로모션 재고 부족으로 적용 못 받는 개수가 있는지 고려.
@@ -42,7 +43,7 @@ public class Stock {
         if (foundProducts.size() == 2) {
             int allProductCountInStock = foundProducts.getFirst().getQuantity() + foundProducts.getLast().getQuantity();
             if (allProductCountInStock < orderItem.getQuantity()) { // 모든 상품을 합쳐도 재고 부족일 경우
-                return OrderStatus.outOfStock();
+                return OrderStatus.outOfStock(foundProducts);
             }
 
             // 하나는 프로모션 적용 가능 제품인 경우: 프로모션 안에서만 처리 가능한지 체크
@@ -65,24 +66,7 @@ public class Stock {
             return OrderStatus.inMultipleNormalProductStock(foundProducts);
         }
 
-        throw new RuntimeException("TODO: ..에러 추가");
-    }
-
-    // isAvailableInStock 의 책임: 재고가 있는지 체크한다. (어떤 방식으로든 구매가 가능한지)
-    public boolean isAvailableInStock(OrderItem orderItem) {
-        List<Product> foundProducts = findProductsByName(orderItem.getItemName());
-        if (foundProducts.isEmpty()) {
-            return false;
-        }
-        if (foundProducts.size() == 1) {
-            return foundProducts.getFirst().isStockAvailable(orderItem.getQuantity());
-        }
-        if (foundProducts.size() == 2) {
-            int allProductCountInStock = foundProducts.getFirst().getQuantity() + foundProducts.getLast().getQuantity();
-            return allProductCountInStock >= orderItem.getQuantity();
-        }
-
-        throw new RuntimeException("TODO: 검색된 상품 에러 안내 추가");
+        throw new IllegalArgumentException(ErrorMessage.INVALID_PRODUCT_PROMOTIONS.getMessage());
     }
 
     private boolean hasPromotedProduct(List<Product> products) {
@@ -93,11 +77,7 @@ public class Stock {
         return products.stream().filter(Product::isPromotedProduct).findFirst();
     }
 
-    private Optional<Product> getNotPromotedProduct(List<Product> products) {
-        return products.stream().filter(product -> !product.isPromotedProduct()).findFirst();
-    }
-
-    private List<Product> findProductsByName(String productName) {
+    private List<Product> findAvailableProductsByName(String productName) {
         return stock.stream()
                 .filter(product -> Objects.equals(product.getName(), productName))
                 .filter(product -> product.getQuantity() > 0)

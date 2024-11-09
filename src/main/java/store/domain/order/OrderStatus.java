@@ -36,6 +36,10 @@ public class OrderStatus {
         return canGetFreeItem;
     }
 
+    public boolean isProductFound() {
+        return !products.isEmpty();
+    }
+
     public boolean isInStock() {
         return inStock;
     }
@@ -63,8 +67,8 @@ public class OrderStatus {
         return new OrderStatus(products, true);
     }
 
-    public static OrderStatus outOfStock() {
-        return new OrderStatus(null, false);
+    public static OrderStatus outOfStock(List<Product> products) {
+        return new OrderStatus(products, false);
     }
 
     public static OrderStatus inNormalStock(Product product) {

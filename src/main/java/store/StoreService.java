@@ -2,6 +2,7 @@ package store;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import store.domain.Stock;
@@ -10,6 +11,7 @@ import store.domain.order.OrderItems;
 import store.domain.order.OrderStatus;
 import store.domain.order.service.OrderService;
 import store.domain.receipt.Receipt;
+import store.messages.ErrorMessage;
 import store.view.View;
 
 public class StoreService {
@@ -46,8 +48,11 @@ public class StoreService {
     }
 
     private void checkOutOfStock(OrderStatus orderStatus) {
+        if (!orderStatus.isProductFound()) {
+            throw new NoSuchElementException(ErrorMessage.INVALID_PRODUCT_NAME.getMessage());
+        }
         if (!orderStatus.isInStock()) {
-            throw new IllegalStateException("TODO: 재고 없음 안내 추가");
+            throw new IllegalStateException(ErrorMessage.OVER_STOCK.getMessage());
         }
     }
 

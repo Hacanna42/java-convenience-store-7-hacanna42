@@ -89,6 +89,10 @@ class OutputView {
         System.out.println(STOCK_NOTICE_MESSAGE);
     }
 
+    protected void printErrorMessage(String errorMessage) {
+        System.out.println(errorMessage);
+    }
+
     protected void newLine() {
         System.out.println();
     }
