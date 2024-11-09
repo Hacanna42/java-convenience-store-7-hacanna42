@@ -18,15 +18,23 @@ class OutputView {
     }
 
     protected void printReceipt(Receipt receipt) {
+        printReceiptHeader();
+        printReceiptItems(receipt);
+        printReceiptFinals(receipt);
+    }
+
+    private void printReceiptHeader() {
         newLine();
         System.out.println(ReceiptForm.HEADER.getMessage());
         System.out.printf(ReceiptForm.TITLES.getMessage(), ReceiptForm.WORD_ITEM_NAME.getMessage(),
                 ReceiptForm.WORD_ITEM_QUANTITY.getMessage(), ReceiptForm.WORD_ITEM_PRICE.getMessage());
+    }
 
+    private void printReceiptItems(Receipt receipt) {
         // 구매한 상품 출력
         for (BuyItem item : receipt.getBuyItems()) {
-            System.out.printf(ReceiptForm.BUY_ITEMS.getMessage(), item.getName(), item.getQuantity(), item.getTotalPrice());
-
+            System.out.printf(ReceiptForm.BUY_ITEMS.getMessage(), item.getName(), item.getQuantity(),
+                    item.getTotalPrice());
         }
 
         System.out.println(ReceiptForm.PROMOTION_DIVIDER.getMessage());
@@ -34,13 +42,19 @@ class OutputView {
         for (FreeItem item : receipt.getFreeItems()) {
             System.out.printf(ReceiptForm.PROMOTION_ITEMS.getMessage(), item.getName(), item.getQuantity());
         }
+    }
 
+    private void printReceiptFinals(Receipt receipt) {
         System.out.println(ReceiptForm.FINAL_DIVIDER.getMessage());
         // 총 구매액, 행사할인, 멤버십 할인, 내실 돈 출력
-        System.out.printf(ReceiptForm.TOTAL_PRICE.getMessage(), ReceiptForm.WORD_TOTAL_PRICE.getMessage(), receipt.getTotalQuantity(), receipt.getTotalPrice());
-        System.out.printf(ReceiptForm.PROMOTION_DISCOUNT.getMessage(), ReceiptForm.WORD_PROMOTION_DISCOUNT.getMessage(), receipt.getTotalPromotionDiscount());
-        System.out.printf(ReceiptForm.MEMBERSHIP_DISCOUNT.getMessage(), ReceiptForm.WORD_MEMBERSHIP_DISCOUNT.getMessage(), receipt.getMembershipDiscount());
-        System.out.printf(ReceiptForm.FINAL_PRICE.getMessage(), ReceiptForm.WORD_FINAL_PRICE.getMessage(), receipt.getFinalPrice());
+        System.out.printf(ReceiptForm.TOTAL_PRICE.getMessage(), ReceiptForm.WORD_TOTAL_PRICE.getMessage(),
+                receipt.getTotalQuantity(), receipt.getTotalPrice());
+        System.out.printf(ReceiptForm.PROMOTION_DISCOUNT.getMessage(), ReceiptForm.WORD_PROMOTION_DISCOUNT.getMessage(),
+                receipt.getTotalPromotionDiscount());
+        System.out.printf(ReceiptForm.MEMBERSHIP_DISCOUNT.getMessage(),
+                ReceiptForm.WORD_MEMBERSHIP_DISCOUNT.getMessage(), receipt.getMembershipDiscount());
+        System.out.printf(ReceiptForm.FINAL_PRICE.getMessage(), ReceiptForm.WORD_FINAL_PRICE.getMessage(),
+                receipt.getFinalPrice());
         newLine();
     }
 
@@ -55,10 +69,15 @@ class OutputView {
 
     protected void printStockStatus(List<Product> products) {
         printStockNoticeMessage();
+        printStockItems(products);
+    }
+
+    private void printStockItems(List<Product> products) {
         newLine();
         for (Product product : products) {
             if (product.getQuantity() != 0) {
-                System.out.printf(StoreMessage.STOCK_STATUS.getMessage(), product.getName(), product.getPrice(), product.getQuantity(),
+                System.out.printf(StoreMessage.STOCK_STATUS.getMessage(), product.getName(), product.getPrice(),
+                        product.getQuantity(),
                         product.getPromotionName());
                 continue;
             }
