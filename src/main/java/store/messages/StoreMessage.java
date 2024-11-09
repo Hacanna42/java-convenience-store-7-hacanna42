@@ -8,6 +8,7 @@ public enum StoreMessage {
     ASK_INSUFFICIENT_PROMOTION("현재 %s %d개는 프로모션 할인이 적용되지 않습니다. 그래도 구매하시겠습니까? (Y/N)%n"),
     ASK_MEMBERSHIP_DISCOUNT("멤버십 할인을 받으시겠습니까? (Y/N)"),
     ASK_CONTINUE_SHOPPING("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)"),
+    NO_PURCHASE_NOTICE("어떤 상품도 구매하지 않으셨습니다."),
 
     STOCK_STATUS("- %s %,d원 %,d개 %s%n"),
     STOCK_STATUS_NO_STOCK("- %s %,d원 재고 없음 %s%n");

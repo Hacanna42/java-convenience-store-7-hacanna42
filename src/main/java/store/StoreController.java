@@ -32,12 +32,21 @@ public class StoreController {
         }
     }
 
-    private Receipt proceedPurchase(OrderItems orderItems) {
-        return storeService.proceedPurchase(stock, orderItems);
+    private void printGreetingMessage() {
+        View.getInstance().printGreetingMessage();
     }
 
-    private void printErrorMessage(String errorMessage) {
-        View.getInstance().printErrorMessage(errorMessage);
+    private void printStockStatus(Stock stock) {
+        View.getInstance().printStockStatus(stock.getProducts());
+    }
+
+    private OrderItems getOrderItems() {
+        String input = View.getInstance().promptBuyItems();
+        return storeService.getOrderItems(input);
+    }
+
+    private Receipt proceedPurchase(OrderItems orderItems) {
+        return storeService.proceedPurchase(stock, orderItems);
     }
 
     private void printReceipt(Receipt receipt) {
@@ -48,16 +57,7 @@ public class StoreController {
         return View.getInstance().promptContinueShopping();
     }
 
-    private OrderItems getOrderItems() {
-        String input = View.getInstance().promptBuyItems();
-        return storeService.getOrderItems(input);
-    }
-
-    private void printGreetingMessage() {
-        View.getInstance().printGreetingMessage();
-    }
-
-    private void printStockStatus(Stock stock) {
-        View.getInstance().printStockStatus(stock.getProducts());
+    private void printErrorMessage(String errorMessage) {
+        View.getInstance().printErrorMessage(errorMessage);
     }
 }

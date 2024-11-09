@@ -16,6 +16,7 @@ import store.view.View;
 
 public class StoreService {
     private static final String ORDER_ITEM_PATTERN_REGEX = "\\[(.+)-(\\d+)]";
+    private static final int FREE_PROMOTION_ITEM_COUNT = 1;
 
     private final OrderService orderService;
 
@@ -29,22 +30,17 @@ public class StoreService {
 
     public Receipt proceedPurchase(Stock stock, OrderItems orderItems) {
         Receipt receipt = new Receipt();
-        for (OrderItem orderItem : orderItems.getOrderItems()) {
-            OrderStatus orderStatus = stock.getOrderStatus(orderItem);
-            checkOutOfStock(orderStatus);
-            confirmOrder(orderStatus, orderItem);
-
-            orderService.purchase(orderStatus, orderItem, receipt);
-        }
+        orderItems.getOrderItems().forEach(orderItem -> proceedOrder(stock, orderItem, receipt));
         checkApplyMembership(receipt);
 
         return receipt;
     }
 
-    private void checkApplyMembership(Receipt receipt) {
-        if (View.getInstance().promptMembershipDiscount()) {
-            receipt.applyMembershipDiscount();
-        }
+    private void proceedOrder(Stock stock, OrderItem orderItem, Receipt receipt) {
+        OrderStatus orderStatus = stock.getOrderStatus(orderItem);
+        checkOutOfStock(orderStatus);
+        confirmOrder(orderStatus, orderItem);
+        orderService.order(orderStatus, orderItem, receipt);
     }
 
     private void checkOutOfStock(OrderStatus orderStatus) {
@@ -56,30 +52,43 @@ public class StoreService {
         }
     }
 
-    private void addCanGetFreeItem(OrderStatus orderStatus, OrderItem orderItem) {
-        if (orderStatus.isCanGetFreeItem()) {
-            boolean addFreeItem = View.getInstance().promptFreePromotion(orderItem.getItemName(), 1);
-            if (addFreeItem) {
-                orderItem.addQuantity(1);
-            }
-        }
-    }
-
-    private void checkApplyPromotionItem(OrderStatus orderStatus, OrderItem orderItem) {
-        if (orderStatus.isMultipleStock() && orderStatus.hasPromotionProduct()) {
-            int notAppliedItemCount = orderStatus.getNotAppliedItemCount(orderItem.getQuantity());
-            boolean proceedWithNotPromotionItems = View.getInstance()
-                    .promptInsufficientPromotion(orderItem.getItemName(), notAppliedItemCount);
-            if (!proceedWithNotPromotionItems) { // 정가로 결제해야하는 수량만큼 제외한 후 결제를 진행한다면
-                orderItem.subQuantity(notAppliedItemCount);
-                orderStatus.removeNormalProduct();
-            }
-        }
-    }
-
     private void confirmOrder(OrderStatus orderStatus, OrderItem orderItem) {
         addCanGetFreeItem(orderStatus, orderItem);
-        checkApplyPromotionItem(orderStatus, orderItem);
+        checkNotAppliedPromotionItem(orderStatus, orderItem);
+    }
+
+    private void addCanGetFreeItem(OrderStatus orderStatus, OrderItem orderItem) {
+        if (orderStatus.isCanGetFreeItem()) {
+            boolean addFreeItem = View.getInstance()
+                    .promptFreePromotion(orderItem.getItemName(), FREE_PROMOTION_ITEM_COUNT);
+            if (addFreeItem) {
+                orderItem.addQuantity(FREE_PROMOTION_ITEM_COUNT);
+            }
+        }
+    }
+
+    private void checkNotAppliedPromotionItem(OrderStatus orderStatus, OrderItem orderItem) {
+        if (!(orderStatus.isMultipleStock() && orderStatus.hasPromotionProduct())) {
+            return;
+        }
+
+        int notAppliedItemCount = orderStatus.getNotAppliedItemCount(orderItem.getQuantity());
+        // 정가로 결제해야 하는 수량을 제외하는 옵션을 선택했다면, 비프로모션 상품을 판매 대상에서 삭제하고 주문 개수를 감소시킴.
+        if (!askProceedWithNotPromotionItems(orderItem, notAppliedItemCount)) {
+            orderItem.subQuantity(notAppliedItemCount);
+            orderStatus.removeNormalProduct();
+        }
+    }
+
+    private boolean askProceedWithNotPromotionItems(OrderItem orderItem, int notAppliedItemCount) {
+        return View.getInstance()
+                .promptInsufficientPromotion(orderItem.getItemName(), notAppliedItemCount);
+    }
+
+    private void checkApplyMembership(Receipt receipt) {
+        if (View.getInstance().promptMembershipDiscount()) {
+            receipt.applyMembershipDiscount();
+        }
     }
 
     private OrderItems makeOrderItems(List<String> separatedInputs) {
@@ -89,14 +98,16 @@ public class StoreService {
         for (String input : separatedInputs) {
             Matcher matcher = pattern.matcher(input);
             if (matcher.matches()) {
-                String name = matcher.group(1);
-                int quantity = Integer.parseInt(matcher.group(2));
-                OrderItem orderItem = new OrderItem(name, quantity);
-                orderItems.add(orderItem);
+                orderItems.add(makeOrderItem(matcher));
             }
         }
-
         return new OrderItems(orderItems);
+    }
+
+    private OrderItem makeOrderItem(Matcher matcher) {
+        String name = matcher.group(1);
+        int quantity = Integer.parseInt(matcher.group(2));
+        return new OrderItem(name, quantity);
     }
 
     private List<String> getSeparatedInput(String input) {

@@ -11,7 +11,7 @@ import store.domain.receipt.Receipt;
 
 public class OrderService {
 
-    public void purchase(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
+    public void order(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
         if (orderStatus.isMultipleStock()) {
             purchaseMultipleStock(orderStatus, orderItem, receipt);
             return;
@@ -29,9 +29,6 @@ public class OrderService {
     }
 
     private void purchasePromotionAndNormalStock(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
-        // 프로모션 재고는 일단 다 쓰고, 나머지는 일반 재고에서
-        // 일단 구현만 하고 리팩토링은 그 이후에
-
         List<Product> products = orderStatus.getMultipleProducts();
         Product promotionProduct = products.stream().filter(Product::isPromotedProduct).findFirst().get();
         Product notPromotionProduct = products.stream().filter(product -> !product.isPromotedProduct()).findFirst()
@@ -85,6 +82,9 @@ public class OrderService {
 
     private void purchaseSingleStock(Product product, OrderItem orderItem, Receipt receipt) {
         int buyQuantity = orderItem.getQuantity();
+        if (buyQuantity == 0) {
+            return;
+        }
 
         BuyItem buyItem = new BuyItem(orderItem.getItemName(), buyQuantity,
                 product.getRegularPurchasePrice(buyQuantity));
