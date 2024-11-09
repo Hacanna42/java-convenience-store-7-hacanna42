@@ -20,7 +20,7 @@ public class OrderStatus {
         this(products, inStock, false, 0);
     }
 
-    public Product getSingleProduct() {
+    public Product getFirstProduct() {
         return products.getFirst();
     }
 
