@@ -42,4 +42,8 @@ public class Promotion {
         int freeItemCount = buyQuantity / (requiredBuyCount + toGiveItemCount);
         return freeItemCount * regularPrice;
     }
+
+    public int getDiscountedQuantity(int buyQuantity) {
+        return buyQuantity / (requiredBuyCount + toGiveItemCount);
+    }
 }

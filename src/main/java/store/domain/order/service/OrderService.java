@@ -3,29 +3,38 @@ package store.domain.order.service;
 import store.domain.order.OrderItem;
 import store.domain.order.OrderStatus;
 import store.domain.product.Product;
+import store.domain.receipt.BuyItem;
+import store.domain.receipt.FreeItem;
+import store.domain.receipt.Receipt;
 
 public class OrderService {
-    public void purchase(OrderStatus orderStatus, OrderItem orderItem) {
+
+    public void purchase(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
         if (orderStatus.isMultipleStock()) {
-            purchaseMultipleStock(orderStatus, orderItem);
+            purchaseMultipleStock(orderStatus, orderItem, receipt);
             return;
         }
 
-        purchaseSingleStock(orderStatus, orderItem);
+        purchaseSingleStock(orderStatus, orderItem, receipt);
     }
 
-    private void purchaseMultipleStock(OrderStatus orderStatus, OrderItem orderItem) {
+    private void purchaseMultipleStock(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
 
     }
 
-    private void purchaseSingleStock(OrderStatus orderStatus, OrderItem orderItem) {
-        /*
-        1. orderItem의 quantity 만큼 product의 quantity 차감
-        2. 구입 정가와, 프로모션 적용 정가 반환
-         */
+    private void purchaseSingleStock(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
         Product product = orderStatus.getSingleProduct();
         int buyQuantity = orderItem.getQuantity();
+
+        BuyItem buyItem = new BuyItem(orderItem.getItemName(), buyQuantity, product.getRegularPurchasePrice(buyQuantity));
+        receipt.addBuyItem(buyItem);
+        if (product.isPromotedProduct()) {
+            int discountedAmount = product.getPromotionDiscountAmount(buyQuantity);
+            int discountedPrice = product.getPromotionDiscountPrice(buyQuantity);
+            FreeItem freeItem = new FreeItem(orderItem.getItemName(), discountedAmount, discountedPrice);
+            receipt.addFreeItem(freeItem);
+        }
+
         product.sell(buyQuantity);
-        product.getPurchasePrice(buyQuantity);
     }
 }

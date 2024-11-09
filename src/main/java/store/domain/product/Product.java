@@ -32,12 +32,18 @@ public class Product {
         return amount * price;
     }
 
-    public int getPurchasePrice(int amount) {
-        int regularPrice = amount * price;
-        if (isPromotedProduct()) {
-            return regularPrice - promotion.getDiscountPrice(amount, price);
+    public int getPromotionDiscountPrice(int amount) {
+        if (!isPromotedProduct()) {
+            return 0;
         }
-        return regularPrice;
+        return promotion.getDiscountPrice(amount, price);
+    }
+
+    public int getPromotionDiscountAmount(int amount) {
+        if (!isPromotedProduct()) {
+            return 0;
+        }
+        return promotion.getDiscountedQuantity(amount);
     }
 
     // 최대 적용 가능한 프로모션 상품 개수를 반환하는 함수

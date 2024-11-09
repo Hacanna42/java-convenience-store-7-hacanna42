@@ -8,28 +8,34 @@ import store.domain.Stock;
 import store.domain.order.OrderItem;
 import store.domain.order.OrderItems;
 import store.domain.order.OrderStatus;
+import store.domain.order.service.OrderService;
+import store.domain.receipt.BuyItems;
+import store.domain.receipt.Receipt;
 import store.view.View;
 
 public class StoreService {
     private static final String ORDER_ITEM_PATTERN_REGEX = "\\[(.+)-(\\d+)]";
+
+    private final OrderService orderService;
+
+    public StoreService(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     public OrderItems getOrderItems(String input) {
         return makeOrderItems(getSeparatedInput(input));
     }
 
     public void proceedPurchase(Stock stock, OrderItems orderItems) {
+        Receipt receipt = new Receipt();
         for (OrderItem orderItem : orderItems.getOrderItems()) {
             OrderStatus orderStatus = stock.getOrderStatus(orderItem);
-            if (checkOrder(orderStatus, orderItem)) {
+            if (!checkOrder(orderStatus, orderItem)) {
                 continue; // 해당 항목 결제 취소
             }
 
-            purchase(orderStatus, orderItem);
+            orderService.purchase(orderStatus, orderItem, receipt);
         }
-    }
-
-    public void purchase(OrderItem orderItem) {
-
     }
 
     private boolean checkContinueWhenOutOfStock(OrderStatus orderStatus, OrderItem orderItem) {
