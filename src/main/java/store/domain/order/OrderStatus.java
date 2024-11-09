@@ -48,10 +48,6 @@ public class OrderStatus {
         return products.stream().anyMatch(Product::isPromotedProduct);
     }
 
-    public int getAppliedPromotionCount() {
-        return promotionCanAppliedCount;
-    }
-
     public int getNotAppliedItemCount(int quantity) {
         if (promotionCanAppliedCount < quantity) {
             return quantity - promotionCanAppliedCount;
@@ -71,11 +67,12 @@ public class OrderStatus {
         return new OrderStatus(products, false);
     }
 
-    public static OrderStatus inNormalStock(Product product) {
+    public static OrderStatus inOnlyNormalStock(Product product) {
         return new OrderStatus(List.of(product), true);
     }
 
-    public static OrderStatus inPromotionStock(Product product, boolean canGetFreeItem, int promotionCanAppliedCount) {
+    public static OrderStatus inOnlyPromotionStock(Product product, boolean canGetFreeItem,
+                                                   int promotionCanAppliedCount) {
         return new OrderStatus(List.of(product), true, canGetFreeItem, promotionCanAppliedCount);
     }
 }

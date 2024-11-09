@@ -21,52 +21,60 @@ public class Stock {
 
     public OrderStatus getOrderStatus(OrderItem orderItem) {
         List<Product> foundProducts = findAvailableProductsByName(orderItem.getItemName());
+        return checkOrderAvailability(orderItem, foundProducts);
+    }
+
+    private OrderStatus checkOrderAvailability(OrderItem orderItem, List<Product> foundProducts) {
         if (foundProducts.isEmpty()) {
             return OrderStatus.outOfStock(foundProducts);
         }
-
         if (foundProducts.size() == 1) {
-            Product product = foundProducts.getFirst();
-            if (!product.isStockAvailable(orderItem.getQuantity())) {
-                return OrderStatus.outOfStock(List.of(product));
-            }
-            if (product.isPromotedProduct()) {
-                // 프로모션을 통해 공짜로 하나를 얻을 수 있는 지 고려, 프로모션 재고 부족으로 적용 못 받는 개수가 있는지 고려.
-                boolean canGetFreeItem = product.isCanGetFreeProduct(orderItem.getQuantity());
-                int maxPromotionCanAppliedCount = product.getMaxAvailablePromotionQuantity();
-                return OrderStatus.inPromotionStock(product, canGetFreeItem, maxPromotionCanAppliedCount);
-            }
-            // 프로모션 제품이 아닌 경우
-            return OrderStatus.inNormalStock(product);
+            return getOrderStatusWithSingleProduct(orderItem, foundProducts.getFirst());
         }
-
         if (foundProducts.size() == 2) {
-            int allProductCountInStock = foundProducts.getFirst().getQuantity() + foundProducts.getLast().getQuantity();
-            if (allProductCountInStock < orderItem.getQuantity()) { // 모든 상품을 합쳐도 재고 부족일 경우
-                return OrderStatus.outOfStock(foundProducts);
-            }
-
-            // 하나는 프로모션 적용 가능 제품인 경우: 프로모션 안에서만 처리 가능한지 체크
-            if (hasPromotedProduct(foundProducts)) {
-                // 프로모션을 통해 공짜로 하나를 얻을 수 있는 지 고려, 프로모션 재고 부족으로 적용 못 받는 개수가 있는지 고려.
-                Product promotedProduct = getPromotedProduct(foundProducts).get();
-                if (promotedProduct.isStockAvailable(orderItem.getQuantity())) { // 프로모션 제품 재고만으로 처리 가능하면
-                    boolean canGetFreeItem = promotedProduct.isCanGetFreeProduct(orderItem.getQuantity());
-                    int maxPromotionCanAppliedCount = promotedProduct.getMaxAvailablePromotionQuantity();
-                    return OrderStatus.inPromotionStock(promotedProduct, canGetFreeItem, maxPromotionCanAppliedCount);
-                }
-
-                // 프로모션 제품 재고만으로 처리 불가능할 때
-                // 프로모션 재고는 일단 다 쓰고, 나머지 양은 비프로모션 재고로 해야 함
-                int maxPromotionCanAppliedCount = promotedProduct.getMaxAvailablePromotionQuantity();
-                return new OrderStatus(foundProducts, true, false, maxPromotionCanAppliedCount);
-            }
-
-            // 비-프로모션 제품 재고만 있을 때
-            return OrderStatus.inMultipleNormalProductStock(foundProducts);
+            return getOrderStatusWithMultipleProducts(orderItem, foundProducts);
         }
 
         throw new IllegalArgumentException(ErrorMessage.INVALID_PRODUCT_PROMOTIONS.getMessage());
+    }
+
+    private static OrderStatus getOrderStatusWithSingleProduct(OrderItem orderItem, Product product) {
+        if (!product.isStockAvailable(orderItem.getQuantity())) {
+            return OrderStatus.outOfStock(List.of(product));
+        }
+        if (product.isPromotedProduct()) {
+            boolean canGetFreeItem = product.isCanGetFreeProduct(orderItem.getQuantity());
+            int maxPromotionCanAppliedCount = product.getMaxAvailablePromotionQuantity();
+            return OrderStatus.inOnlyPromotionStock(product, canGetFreeItem, maxPromotionCanAppliedCount);
+        }
+
+        return OrderStatus.inOnlyNormalStock(product);
+    }
+
+    private OrderStatus getOrderStatusWithMultipleProducts(OrderItem orderItem, List<Product> foundProducts) {
+        if (getAllQuantity(foundProducts) < orderItem.getQuantity()) {
+            return OrderStatus.outOfStock(foundProducts);
+        }
+
+        if (hasPromotedProduct(foundProducts)) {
+            return checkMixedProductsSituation(orderItem, foundProducts);
+        }
+
+        // 프로모션이 적용되지 않은 상품만 2개라면
+        return OrderStatus.inMultipleNormalProductStock(foundProducts);
+    }
+
+    private OrderStatus checkMixedProductsSituation(OrderItem orderItem, List<Product> foundProducts) {
+        Product promotedProduct = getPromotedProduct(foundProducts).get();
+        if (promotedProduct.isStockAvailable(orderItem.getQuantity())) { // 프로모션 제품 재고만으로 처리 가능하면
+            boolean canGetFreeItem = promotedProduct.isCanGetFreeProduct(orderItem.getQuantity());
+            int maxPromotionCanAppliedCount = promotedProduct.getMaxAvailablePromotionQuantity();
+            return OrderStatus.inOnlyPromotionStock(promotedProduct, canGetFreeItem, maxPromotionCanAppliedCount);
+        }
+
+        // 프로모션 제품의 재고만으로 처리가 불가능하다면, 프로모션 재고는 일단 다 쓰고, 나머지 양은 비프로모션 재고로 처리
+        int maxPromotionCanAppliedCount = promotedProduct.getMaxAvailablePromotionQuantity();
+        return new OrderStatus(foundProducts, true, false, maxPromotionCanAppliedCount);
     }
 
     private boolean hasPromotedProduct(List<Product> products) {
@@ -77,10 +85,12 @@ public class Stock {
         return products.stream().filter(Product::isPromotedProduct).findFirst();
     }
 
+    private int getAllQuantity(List<Product> products) {
+        return products.getFirst().getQuantity() + products.getLast().getQuantity();
+    }
+
     private List<Product> findAvailableProductsByName(String productName) {
-        return stock.stream()
-                .filter(product -> Objects.equals(product.getName(), productName))
-                .filter(product -> product.getQuantity() > 0)
-                .toList();
+        return stock.stream().filter(product -> Objects.equals(product.getName(), productName))
+                .filter(product -> product.getQuantity() > 0).toList();
     }
 }
