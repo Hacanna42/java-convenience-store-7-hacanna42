@@ -2,6 +2,9 @@ package store.view;
 
 import java.util.List;
 import store.domain.product.Product;
+import store.domain.receipt.BuyItem;
+import store.domain.receipt.FreeItem;
+import store.domain.receipt.Receipt;
 
 class OutputView {
     private static final String GREETING_MESSAGE = "안녕하세요. W편의점입니다.";
@@ -15,6 +18,29 @@ class OutputView {
 
     protected void printGreetingMessage() {
         System.out.println(GREETING_MESSAGE);
+    }
+
+    protected void printReceipt(Receipt receipt) {
+        System.out.println("==============W 편의점================");
+        System.out.printf("%-15s\t%-10s\t%s\n", "상품명", "수량", "금액");
+
+        // 구매한 상품 출력
+        for (BuyItem item : receipt.getBuyItems()) {
+            System.out.printf("%-15s\t%-10d\t%,d\n", item.getName(), item.getQuantity(), item.getTotalPrice());
+        }
+
+        System.out.println("==============증   정================");
+        // 증정 상품 출력
+        for (FreeItem item : receipt.getFreeItems()) {
+            System.out.printf("%-15s\t%d\n", item.getName(), item.getQuantity());
+        }
+
+        System.out.println("====================================");
+        // 총 구매액, 행사할인, 멤버십 할인, 내실 돈 출력
+        System.out.printf("%-15s\t%-10d\t%,d\n", "총구매액", receipt.getTotalQuantity(), receipt.getTotalPrice());
+        System.out.printf("%-25s\t\t%,d\n", "행사할인", -receipt.getTotalPromotionDiscount());
+        System.out.printf("%-25s\t\t%,d\n", "멤버십할인", -receipt.getMembershipDiscount());
+        System.out.printf("%-25s\t\t%,d\n", "내실돈", receipt.getFinalPrice());
     }
 
     protected void printBuyRequestMessage() {

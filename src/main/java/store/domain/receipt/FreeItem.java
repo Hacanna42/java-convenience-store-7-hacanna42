@@ -11,6 +11,14 @@ public class FreeItem {
         this.totalDiscount = totalDiscount;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
     public int getTotalDiscount() {
         return totalDiscount;
     }

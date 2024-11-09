@@ -26,7 +26,7 @@ public class StoreService {
         return makeOrderItems(getSeparatedInput(input));
     }
 
-    public void proceedPurchase(Stock stock, OrderItems orderItems) {
+    public Receipt proceedPurchase(Stock stock, OrderItems orderItems) {
         Receipt receipt = new Receipt();
         for (OrderItem orderItem : orderItems.getOrderItems()) {
             OrderStatus orderStatus = stock.getOrderStatus(orderItem);
@@ -35,6 +35,15 @@ public class StoreService {
             }
 
             orderService.purchase(orderStatus, orderItem, receipt);
+        }
+        checkApplyMembership(receipt);
+
+        return receipt;
+    }
+
+    private void checkApplyMembership(Receipt receipt) {
+        if (View.getInstance().promptMembershipDiscount()) {
+            receipt.applyMembershipDiscount();
         }
     }
 

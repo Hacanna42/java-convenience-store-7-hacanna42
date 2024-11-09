@@ -3,6 +3,7 @@ package store.view;
 import java.util.List;
 import java.util.function.Supplier;
 import store.domain.product.Product;
+import store.domain.receipt.Receipt;
 import store.util.Validator;
 
 public class View {
@@ -20,6 +21,10 @@ public class View {
             instance = new View(new InputView(), new OutputView());
         }
         return instance;
+    }
+
+    public void printReceipt(Receipt receipt) {
+        outputView.printReceipt(receipt);
     }
 
     public void printGreetingMessage() {

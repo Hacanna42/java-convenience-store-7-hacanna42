@@ -14,4 +14,12 @@ public class BuyItem {
     public int getTotalPrice() {
         return totalPrice;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }

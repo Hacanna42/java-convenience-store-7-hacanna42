@@ -12,4 +12,16 @@ public class BuyItems {
     public void add(BuyItem buyItem) {
         buyItems.add(buyItem);
     }
+
+    public List<BuyItem> getBuyItems() {
+        return buyItems;
+    }
+
+    public int getTotalQuantity() {
+        return buyItems.stream().mapToInt(BuyItem::getQuantity).sum();
+    }
+
+    public int getTotalPrice() {
+        return buyItems.stream().mapToInt(BuyItem::getTotalPrice).sum();
+    }
 }

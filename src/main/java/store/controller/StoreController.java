@@ -1,6 +1,7 @@
 package store.controller;
 
 import store.domain.Stock;
+import store.domain.receipt.Receipt;
 import store.service.StoreService;
 import store.domain.order.OrderItems;
 import store.view.View;
@@ -18,7 +19,8 @@ public class StoreController {
         printGreetingMessage();
         printStockStatus(stock);
         OrderItems orderItems = getOrderItems();
-        storeService.proceedPurchase(stock, orderItems);
+        Receipt receipt = storeService.proceedPurchase(stock, orderItems);
+        View.getInstance().printReceipt(receipt);
     }
 
     private OrderItems getOrderItems() {

@@ -12,4 +12,8 @@ public class FreeItems {
     public void add(FreeItem freeItem) {
         freeItems.add(freeItem);
     }
+
+    public List<FreeItem> getFreeItems() {
+        return freeItems;
+    }
 }
