@@ -23,6 +23,17 @@ public class View {
         return instance;
     }
 
+    public boolean promptContinueShopping() {
+        outputView.printContinueShoppingMessage();
+        boolean continueShopping = inputView.getYesOrNo();
+        outputView.newLine();
+        return continueShopping;
+    }
+
+    public void printOutOfStock() {
+        outputView.printOutOfStockNotice();
+    }
+
     public void printReceipt(Receipt receipt) {
         outputView.printReceipt(receipt);
     }
@@ -44,11 +55,6 @@ public class View {
         });
     }
 
-    public boolean promptOutOfStock(String itemName) {
-        outputView.printOutOfStockNotice(itemName);
-        return inputView.getYesOrNo();
-    }
-
     public boolean promptFreePromotion(String itemName, int freeItemCount) {
         outputView.printFreePromotionNotice(itemName, freeItemCount);
         return inputView.getYesOrNo();
@@ -61,11 +67,6 @@ public class View {
 
     public boolean promptMembershipDiscount() {
         outputView.printMembershipDiscountNotice();
-        return inputView.getYesOrNo();
-    }
-
-    public boolean promptForAdditionalItem() {
-        outputView.printAdditionalItemNotice();
         return inputView.getYesOrNo();
     }
 

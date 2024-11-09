@@ -4,7 +4,7 @@ import java.util.List;
 import store.domain.product.Product;
 
 public class OrderStatus {
-    private final List<Product> products;
+    private List<Product> products;
     private final boolean inStock;
     private final boolean canGetFreeItem;
     private final int promotionCanAppliedCount;
@@ -22,6 +22,10 @@ public class OrderStatus {
 
     public Product getFirstProduct() {
         return products.getFirst();
+    }
+
+    public void removeNormalProduct() {
+        products = products.stream().filter(Product::isPromotedProduct).toList();
     }
 
     public List<Product> getMultipleProducts() {

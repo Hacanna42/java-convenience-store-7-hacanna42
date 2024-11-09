@@ -16,11 +16,21 @@ public class StoreController {
     }
 
     public void run() {
-        printGreetingMessage();
-        printStockStatus(stock);
-        OrderItems orderItems = getOrderItems();
-        Receipt receipt = storeService.proceedPurchase(stock, orderItems);
-        View.getInstance().printReceipt(receipt);
+        do {
+            printGreetingMessage();
+            printStockStatus(stock);
+            OrderItems orderItems = getOrderItems();
+            try {
+                Receipt receipt = storeService.proceedPurchase(stock, orderItems);
+                View.getInstance().printReceipt(receipt);
+            } catch (IllegalStateException illegalStateException) {
+                View.getInstance().printOutOfStock();
+            }
+        } while(askContinueShopping());
+    }
+
+    private boolean askContinueShopping() {
+        return View.getInstance().promptContinueShopping();
     }
 
     private OrderItems getOrderItems() {

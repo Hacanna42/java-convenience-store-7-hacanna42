@@ -20,6 +20,18 @@ public class Product {
         return name;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public String getPromotionName() {
+        String promotionName = "";
+        if (promotion != null) {
+            promotionName = promotion.getPromotionName();
+        }
+        return promotionName;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -78,16 +90,5 @@ public class Product {
             return promotion.isAvailablePromotion();
         }
         return false;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(name).append(" ").append(price).append("원 ").append(quantity).append("개");
-        if (promotion != null) {
-            stringBuilder.append(" ").append(promotion.getPromotionName());
-        }
-
-        return stringBuilder.toString();
     }
 }

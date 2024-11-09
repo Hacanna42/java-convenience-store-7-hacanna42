@@ -100,6 +100,7 @@ public class Stock {
     private List<Product> findProductsByName(String productName) {
         return stock.stream()
                 .filter(product -> Objects.equals(product.getName(), productName))
+                .filter(product -> product.getQuantity() > 0)
                 .toList();
     }
 }

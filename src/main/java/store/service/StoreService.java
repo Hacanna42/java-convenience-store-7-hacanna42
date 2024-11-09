@@ -30,9 +30,8 @@ public class StoreService {
         Receipt receipt = new Receipt();
         for (OrderItem orderItem : orderItems.getOrderItems()) {
             OrderStatus orderStatus = stock.getOrderStatus(orderItem);
-            if (!checkOrder(orderStatus, orderItem)) {
-                continue; // 해당 항목 결제 취소
-            }
+            checkOutOfStock(orderStatus);
+            confirmOrder(orderStatus, orderItem);
 
             orderService.purchase(orderStatus, orderItem, receipt);
         }
@@ -47,17 +46,10 @@ public class StoreService {
         }
     }
 
-    private boolean checkContinueWhenOutOfStock(OrderStatus orderStatus, OrderItem orderItem) {
+    private void checkOutOfStock(OrderStatus orderStatus) {
         if (!orderStatus.isInStock()) {
-            return View.getInstance().promptOutOfStock(orderItem.getItemName());
+            throw new IllegalStateException("TODO: 재고 없음 안내 추가");
         }
-
-        // 재고가 있으면 Continue
-        return true;
-    }
-
-    private boolean checkCancelPurchase(OrderStatus orderStatus, OrderItem orderItem) {
-        return !checkContinueWhenOutOfStock(orderStatus, orderItem);
     }
 
     private void addCanGetFreeItem(OrderStatus orderStatus, OrderItem orderItem) {
@@ -76,18 +68,14 @@ public class StoreService {
                     .promptInsufficientPromotion(orderItem.getItemName(), notAppliedItemCount);
             if (!proceedWithNotPromotionItems) { // 정가로 결제해야하는 수량만큼 제외한 후 결제를 진행한다면
                 orderItem.subQuantity(notAppliedItemCount);
+                orderStatus.removeNormalProduct();
             }
         }
     }
 
-    private boolean checkOrder(OrderStatus orderStatus, OrderItem orderItem) {
-        if (checkCancelPurchase(orderStatus, orderItem)) {
-            return false;
-        }
-
+    private void confirmOrder(OrderStatus orderStatus, OrderItem orderItem) {
         addCanGetFreeItem(orderStatus, orderItem);
         checkApplyPromotionItem(orderStatus, orderItem);
-        return true;
     }
 
     private OrderItems makeOrderItems(List<String> separatedInputs) {
