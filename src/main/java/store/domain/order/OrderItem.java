@@ -18,10 +18,14 @@ public class OrderItem {
     }
 
     public void addQuantity(int amount) {
-        quantity += amount;
+        if (amount > 0) {
+            quantity += amount;
+        }
     }
 
     public void subQuantity(int amount) {
-        quantity -= amount;
+        if (amount > 0) {
+            quantity -= amount;
+        }
     }
 }
