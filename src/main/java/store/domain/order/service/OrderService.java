@@ -45,36 +45,38 @@ public class OrderService {
         notPromotionProduct.sell(orderItem.getQuantity() - maxQuantityOfPromotionProduct);
 
         receipt.addPriceOfPromotionItem(promotionProduct.getRegularPurchasePrice(maxQuantityOfPromotionProduct));
-        receipt.addBuyItem(new BuyItem(orderItem.getItemName(), orderItem.getQuantity(),
-                promotionProduct.getRegularPurchasePrice(orderItem.getQuantity())));
-        receipt.addFreeItem(new FreeItem(orderItem.getItemName(),
+        updateReceiptBuyItem(receipt, orderItem, orderItem.getQuantity(),
+                promotionProduct.getRegularPurchasePrice(orderItem.getQuantity()));
+        updateReceiptFreeItem(receipt, orderItem,
                 promotionProduct.getPromotionDiscountAmount(maxQuantityOfPromotionProduct),
-                promotionProduct.getPromotionDiscountPrice(maxQuantityOfPromotionProduct)));
+                promotionProduct.getPromotionDiscountPrice(maxQuantityOfPromotionProduct));
     }
 
     private void purchaseMultipleNormalStock(OrderStatus orderStatus, OrderItem orderItem, Receipt receipt) {
         List<Product> products = orderStatus.getMultipleProducts();
         Optional<Product> optionalProduct = products.stream()
-                .filter(product -> product.isStockAvailable(orderItem.getQuantity()))
-                .findFirst();
+                .filter(product -> product.isStockAvailable(orderItem.getQuantity())).findFirst();
 
         if (optionalProduct.isPresent()) {
             purchaseSingleStock(optionalProduct.get(), orderItem, receipt);
             return;
         }
 
+        updateReceiptInMultipleNormalProducts(orderItem, receipt, products);
+    }
+
+    private static void updateReceiptInMultipleNormalProducts(OrderItem orderItem, Receipt receipt,
+                                                              List<Product> products) {
         int currentRegularPrice = 0;
 
         int maxQuantityOfFirstProduct = products.getFirst().getQuantity();
         products.getFirst().sell(maxQuantityOfFirstProduct);
         currentRegularPrice += products.getFirst().getRegularPurchasePrice(maxQuantityOfFirstProduct);
-
         int remainBuyQuantity = orderItem.getQuantity() - maxQuantityOfFirstProduct;
         products.getLast().sell(remainBuyQuantity);
         currentRegularPrice += products.getLast().getRegularPurchasePrice(remainBuyQuantity);
 
-        BuyItem buyItem = new BuyItem(orderItem.getItemName(), orderItem.getQuantity(), currentRegularPrice);
-        receipt.addBuyItem(buyItem);
+        updateReceiptBuyItem(receipt, orderItem, orderItem.getQuantity(), currentRegularPrice);
     }
 
     private void purchaseSingleStock(Product product, OrderItem orderItem, Receipt receipt) {
@@ -82,18 +84,24 @@ public class OrderService {
         if (buyQuantity == 0) {
             return;
         }
-
-        BuyItem buyItem = new BuyItem(orderItem.getItemName(), buyQuantity,
-                product.getRegularPurchasePrice(buyQuantity));
-        receipt.addBuyItem(buyItem);
+        updateReceiptBuyItem(receipt, orderItem, buyQuantity, product.getRegularPurchasePrice(buyQuantity));
         if (product.isPromotedProduct()) {
-            int discountedAmount = product.getPromotionDiscountAmount(buyQuantity);
-            int discountedPrice = product.getPromotionDiscountPrice(buyQuantity);
-            FreeItem freeItem = new FreeItem(orderItem.getItemName(), discountedAmount, discountedPrice);
-            receipt.addFreeItem(freeItem);
+            updateReceiptFreeItem(receipt, orderItem, product.getPromotionDiscountAmount(buyQuantity),
+                    product.getPromotionDiscountPrice(buyQuantity));
             receipt.addPriceOfPromotionItem(product.getRegularPurchasePrice(buyQuantity));
         }
-
         product.sell(buyQuantity);
+    }
+
+    private static void updateReceiptBuyItem(Receipt receipt, OrderItem orderItem, int buyQuantity,
+                                             int regularPurchasePrice) {
+        BuyItem item = new BuyItem(orderItem.getItemName(), buyQuantity, regularPurchasePrice);
+        receipt.addBuyItem(item);
+    }
+
+    private static void updateReceiptFreeItem(Receipt receipt, OrderItem orderItem, int discountedAmount,
+                                              int discountedPrice) {
+        FreeItem item = new FreeItem(orderItem.getItemName(), discountedAmount, discountedPrice);
+        receipt.addFreeItem(item);
     }
 }

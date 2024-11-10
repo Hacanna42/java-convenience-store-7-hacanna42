@@ -32,7 +32,6 @@ public class Stock {
         if (foundAvailableProducts.isEmpty()) {
             return OrderStatus.outOfStock(findProductsByName(orderItem.getItemName()));
         }
-
         if (foundAvailableProducts.size() == 1) {
             return getOrderStatusWithSingleProduct(orderItem, foundAvailableProducts.getFirst());
         }

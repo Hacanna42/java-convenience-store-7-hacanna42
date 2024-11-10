@@ -13,7 +13,6 @@ public enum ReceiptForm {
     MEMBERSHIP_DISCOUNT("%-25s\t\t-%,d%n"),
     FINAL_PRICE("%-25s\t\t%,d%n"),
 
-
     WORD_ITEM_NAME("상품명"),
     WORD_ITEM_QUANTITY("수량"),
     WORD_ITEM_PRICE("금액"),
@@ -22,7 +21,6 @@ public enum ReceiptForm {
     WORD_PROMOTION_DISCOUNT("행사할인"),
     WORD_MEMBERSHIP_DISCOUNT("멤버십할인"),
     WORD_FINAL_PRICE("내실돈");
-
 
     private final String message;
 

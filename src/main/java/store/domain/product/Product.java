@@ -78,13 +78,6 @@ public class Product {
         return quantity >= toBuyQuantity;
     }
 
-    public boolean isAllBuyItemCanApplyPromotion(int toBuyQuantity) {
-        if (isPromotedProduct()) {
-            return promotion.getMaxAvailablePromotionQuantity(quantity) >= toBuyQuantity;
-        }
-        return false;
-    }
-
     public boolean isPromotedProduct() {
         if (promotion != null) {
             return promotion.isAvailablePromotion();
