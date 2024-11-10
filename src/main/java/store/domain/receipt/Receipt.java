@@ -72,5 +72,8 @@ public class Receipt {
     public void applyMembershipDiscount() {
         int totalPriceOfNormalItems = totalPrice - totalPriceOfPromotionItem;
         membershipDiscount = (int) (totalPriceOfNormalItems * 0.3);
+        if (membershipDiscount > 8000) { // 최대 할인 한도는 8,000원
+            membershipDiscount = 8000;
+        }
     }
 }
