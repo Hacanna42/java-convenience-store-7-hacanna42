@@ -1,5 +1,7 @@
 package store.domain.order;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,8 +13,6 @@ import java.util.List;
 import store.domain.product.ProductParameter;
 import store.domain.promotion.Promotion;
 import store.domain.promotion.PromotionParameter;
-
-import static org.assertj.core.api.Assertions.*;
 
 class OrderStatusTest {
 
