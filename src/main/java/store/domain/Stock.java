@@ -1,11 +1,15 @@
 package store.domain;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import store.domain.order.OrderItem;
 import store.domain.order.OrderStatus;
 import store.domain.product.Product;
+import store.domain.product.ProductParameter;
 import store.messages.ErrorMessage;
 
 public class Stock {
@@ -17,6 +21,19 @@ public class Stock {
 
     public List<Product> getProducts() {
         return stock;
+    }
+
+    /* generateNormalProductFromOnlyPromotionProduct() 메서드의 존재 이유
+     * 사실 납득은 잘 가지 않지만 우아한테크코스의 실행 결과 예시에 따르면 프로모션이 적용된 모든 상품은, 프로모션이 적용되지 않은 버전의 상품 정보도 표시해야 함.
+     * 따라서, 프로모션이 적용된 상품에 대해서 프로모션이 적용되지 않은 일반 상품이 존재하지 않으면 일반 상품을 생성함.
+     */
+    public void generateNormalProductFromOnlyPromotionProduct() {
+        List<Product> onlyPromotionProducts = findOnlyPromotionProducts(stock);
+        for (Product product : onlyPromotionProducts) {
+            ProductParameter productParameter = new ProductParameter(
+                    List.of(product.getName(), String.valueOf(product.getPrice()), "0", "null"));
+            insertProduct(new Product(productParameter, null));
+        }
     }
 
     public OrderStatus getOrderStatus(OrderItem orderItem) {
@@ -102,5 +119,33 @@ public class Stock {
                 .filter(product -> product.getQuantity() > 0).toList();
     }
 
+    private int findProductIndexByName(String productName) {
+        for (int i = 0; i < stock.size(); i++) {
+            if (stock.get(i).getName().equals(productName)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
+    private void insertProduct(Product product) {
+        int index = findProductIndexByName(product.getName());
+        if (index != -1) {
+            // 동일한 이름의 상품이 존재하는 경우, 그 상품 다음 위치에 추가
+            stock.add(index + 1, product);
+            return;
+        }
+        stock.add(product);
+    }
+
+    private List<Product> findOnlyPromotionProducts(List<Product> products) {
+        Map<String, List<Product>> productByName = products.stream()
+                .collect(Collectors.groupingBy(Product::getName));
+
+        return productByName.values().stream()
+                .filter(productList -> productList.size() == 1) // 유일하게 하나만 존재하는 이름의 상품들 필터링
+                .flatMap(Collection::stream)
+                .filter(Product::isPromotedProduct)
+                .collect(Collectors.toList());
+    }
 }

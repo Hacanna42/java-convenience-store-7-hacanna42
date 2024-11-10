@@ -18,7 +18,9 @@ public class StoreInitializer {
 
     public Stock initStock() throws FileNotFoundException {
         promotions = readPromotionFile();
-        return readProductFile();
+        Stock stock = readProductFile();
+        stock.generateNormalProductFromOnlyPromotionProduct();
+        return stock;
     }
 
     private Promotions readPromotionFile() throws FileNotFoundException {
