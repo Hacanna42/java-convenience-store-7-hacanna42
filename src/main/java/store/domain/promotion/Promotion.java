@@ -23,7 +23,6 @@ public class Promotion {
      *
      * 따라서, 프로모션 재고 수가 N일때 프로모션이 적용될 수 있는 최대 개수는 [N - (N % (requiredBuyCount + toGiveItemCount))] 이다.
      */
-
     public int getMaxAvailablePromotionQuantity(int currentStockCount) {
         return currentStockCount - (currentStockCount % (requiredBuyCount + toGiveItemCount));
     }

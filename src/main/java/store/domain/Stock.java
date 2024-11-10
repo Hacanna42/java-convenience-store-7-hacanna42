@@ -24,7 +24,7 @@ public class Stock {
     }
 
     /* generateNormalProductFromOnlyPromotionProduct() 메서드의 존재 이유
-     * 사실 납득은 잘 가지 않지만 우아한테크코스의 실행 결과 예시에 따르면 프로모션이 적용된 모든 상품은, 프로모션이 적용되지 않은 버전의 상품 정보도 표시해야 함.
+     * 우아한테크코스의 실행 결과 예시에 따르면 프로모션이 적용된 모든 상품은, 프로모션이 적용되지 않은 버전의 상품 정보도 표시해야 함.
      * 따라서, 프로모션이 적용된 상품에 대해서 프로모션이 적용되지 않은 일반 상품이 존재하지 않으면 일반 상품을 생성함.
      */
     public void generateNormalProductFromOnlyPromotionProduct() {
@@ -131,7 +131,6 @@ public class Stock {
     private void insertProduct(Product product) {
         int index = findProductIndexByName(product.getName());
         if (index != -1) {
-            // 동일한 이름의 상품이 존재하는 경우, 그 상품 다음 위치에 추가
             stock.add(index + 1, product);
             return;
         }
@@ -143,7 +142,7 @@ public class Stock {
                 .collect(Collectors.groupingBy(Product::getName));
 
         return productByName.values().stream()
-                .filter(productList -> productList.size() == 1) // 유일하게 하나만 존재하는 이름의 상품들 필터링
+                .filter(productList -> productList.size() == 1)
                 .flatMap(Collection::stream)
                 .filter(Product::isPromotedProduct)
                 .collect(Collectors.toList());
