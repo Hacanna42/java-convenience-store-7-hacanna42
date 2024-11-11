@@ -1,6 +1,5 @@
 package store.domain.order;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,10 +9,10 @@ public class OrderItems {
     private final List<OrderItem> orderItems;
 
     public OrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+        this.orderItems = List.copyOf(orderItems);
     }
 
     public List<OrderItem> getOrderItems() {
-        return Collections.unmodifiableList(orderItems);
+        return orderItems;
     }
 }
