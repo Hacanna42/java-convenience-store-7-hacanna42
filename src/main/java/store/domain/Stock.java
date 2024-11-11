@@ -12,6 +12,14 @@ import store.domain.product.Product;
 import store.domain.product.ProductParameter;
 import store.messages.ErrorMessage;
 
+
+/**
+ * Stock 클래스는 편의점의 상품 목록(재고)을 필드로 가지고 있습니다.
+ * OrderItem(주문 내역)이 들어왔을 때 재고 현황을 파악하여 OrderStatus 를 반환하는 것이 책임입니다.
+ *
+ * @see OrderItem
+ * @see OrderStatus
+ */
 public class Stock {
     private final List<Product> stock;
 
