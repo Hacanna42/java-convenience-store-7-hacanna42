@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * OrderItems 는 OrderItem 의 일급 컬렉션입니다.
+ * @see OrderItem
  */
 public class OrderItems {
     private final List<OrderItem> orderItems;

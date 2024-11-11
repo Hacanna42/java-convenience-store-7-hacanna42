@@ -2,6 +2,9 @@ package store.util;
 
 import store.messages.ErrorMessage;
 
+/**
+ * Validator 는 사용자의 입력 검증이나 파일 검증을 처리하는 유틸성 클래스입니다.
+ */
 public class Validator {
     // 상품명, 수량은 하이픈(-)으로, 개별 상품은 대괄호([])로 묶어 쉼표(,)로 구분되어 있는지 확인하는 정규식
     private static final String BUY_INPUT_REGEX = "^(\\[[^,\\[\\]]+?-\\d+?],)*\\[[^,\\[\\]]+?-\\d+?]$";

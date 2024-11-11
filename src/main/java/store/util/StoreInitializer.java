@@ -13,6 +13,9 @@ import store.domain.promotion.Promotions;
 import store.domain.product.Product;
 import store.domain.product.ProductParameter;
 
+/**
+ * StoreInitializer 는 상품과 프로모션 파일을 읽고, 재고 정보를 생성하는 유틸성 클래스입니다.
+ */
 public class StoreInitializer {
     private Promotions promotions;
 

@@ -3,6 +3,10 @@ package store.domain.order;
 import java.util.List;
 import store.domain.product.Product;
 
+/**
+ * OrderStatus 클래스는 주문 요청에 대한 결과를 필드로 가지고 있습니다.
+ * 결제에 필요한 정보를 제공하는 것이 책임입니다.
+ */
 public class OrderStatus {
     private List<Product> products;
     private final boolean inStock;

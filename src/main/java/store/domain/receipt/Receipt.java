@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Receipt 는 구매한 품목과, 무료로 제공받은 품목을 포함한 최종 구매 관련 정보들을 필드에 가지고 있습니다.
+ * 영수증 정보에 필요한 정보들을 관리하고 제공하는 것이 책임입니다.
+ *
+ * @see BuyItems
+ * @see FreeItems
+ */
 public class Receipt {
     private final BuyItems buyItems;
     private final FreeItems freeItems;

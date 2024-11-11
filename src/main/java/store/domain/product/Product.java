@@ -2,6 +2,10 @@ package store.domain.product;
 
 import store.domain.promotion.Promotion;
 
+/**
+ * Product 는 상품 정보와 적용된 프로모션 정보를 필드로 가지고 있습니다.
+ * 상품 정보를 제공하는 것이 책임입니다.
+ */
 public class Product {
     private final String name;
     private final int price;

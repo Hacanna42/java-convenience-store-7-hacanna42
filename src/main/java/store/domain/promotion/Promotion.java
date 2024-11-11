@@ -2,6 +2,10 @@ package store.domain.promotion;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 
+/**
+ * Promotion 은 프로모션 정보를 필드로 가지고 있습니다.
+ * 프로모션 할인 가격 등 다양한 프로모션 정보를 제공하는 것이 책임입니다.
+ */
 public class Promotion {
     private final String promotionName;
     private final int requiredBuyCount;

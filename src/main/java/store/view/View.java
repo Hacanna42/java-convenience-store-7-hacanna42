@@ -6,6 +6,10 @@ import store.domain.product.Product;
 import store.domain.receipt.Receipt;
 import store.util.Validator;
 
+/**
+ * View 는 InputView 와 OutputView 객체를 필드에 가지고 있는 싱글톤 객체입니다.
+ * 입출력에 관한 모든 동작을 처리하는 것이 책임입니다.
+ */
 public class View {
     private static View instance;
     private final InputView inputView;

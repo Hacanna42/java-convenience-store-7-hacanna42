@@ -2,6 +2,10 @@ package store.domain.receipt;
 
 import java.util.List;
 
+/**
+ * BuyItems 는 BuyItem 의 일급 컬렉션입니다.
+ * @see BuyItem
+ */
 public class BuyItems {
     private final List<BuyItem> buyItems;
 

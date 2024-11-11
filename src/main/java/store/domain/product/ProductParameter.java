@@ -2,6 +2,10 @@ package store.domain.product;
 
 import java.util.List;
 
+/**
+ * ProductParameter 는 Product 를 초기화하기 위한 컬렉션 필드와, 인덱스와 파라미터를 매치하기 위한 Enum 을 가지고 있습니다.
+ * Product 의 생성자로 전달되어 Product 를 올바르게 초기화하는 것이 역할입니다.
+ */
 public class ProductParameter {
 
     public enum ProductSequence {
